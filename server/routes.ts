@@ -82,9 +82,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const mode = req.params.mode;
       const count = req.query.count ? parseInt(req.query.count as string) : 1;
+      const duration = req.query.duration ? parseInt(req.query.duration as string) : 30;
       
-      // This just returns the text options in memory
-      const texts = storage.getTexts(mode, count);
+      // This returns texts with appropriate length based on duration
+      const texts = storage.getTexts(mode, count, duration);
       res.json(texts);
     } catch (error) {
       console.error(error);

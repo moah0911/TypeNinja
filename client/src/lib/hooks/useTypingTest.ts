@@ -50,9 +50,9 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
   
   const intervalRef = useRef<number | null>(null);
   
-  // Fetch the text based on selected mode
+  // Fetch the text based on selected mode and duration
   const { data: texts, isLoading: loadingText, refetch } = useQuery({
-    queryKey: [`/api/texts/${typingState.mode}`],
+    queryKey: [`/api/texts/${typingState.mode}`, { duration }],
     enabled: false,
   });
   

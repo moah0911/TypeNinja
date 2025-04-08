@@ -53,7 +53,7 @@ export interface IStorage {
   getTypingTests(userId?: number): Promise<TypingTest[]>;
   getUserSettings(userId: number): Promise<UserSettings | undefined>;
   updateUserSettings(userId: number, settings: Partial<InsertUserSettings>): Promise<UserSettings>;
-  getTexts(mode: string, count?: number): string[];
+  getTexts(mode: string, count?: number, duration?: number): string[];
 }
 
 export class MemStorage implements IStorage {
@@ -93,7 +93,21 @@ export class MemStorage implements IStorage {
   async saveTypingTest(test: InsertTypingTest): Promise<TypingTest> {
     const id = this.currentTestId++;
     const timestamp = new Date();
-    const newTest: TypingTest = { ...test, id, timestamp };
+    
+    // Create a proper TypingTest object with all required fields
+    // to avoid type issues with userId (ensuring it's null or a number, not undefined)
+    const newTest: TypingTest = {
+      id,
+      userId: test.userId ?? null, // Ensure userId is either null or a number
+      wpm: test.wpm,
+      accuracy: test.accuracy,
+      duration: test.duration,
+      mode: test.mode,
+      characters: test.characters,
+      errors: test.errors,
+      timestamp
+    };
+    
     this.typingTests.push(newTest);
     return newTest;
   }
@@ -135,17 +149,52 @@ export class MemStorage implements IStorage {
     return updatedSettings;
   }
 
-  getTexts(mode: string, count: number = 1): string[] {
+  getTexts(mode: string, count: number = 1, duration: number = 30): string[] {
     const collection = textCollections[mode as keyof typeof textCollections] || textCollections.normal;
     
-    if (count === 1) {
-      const randomIndex = Math.floor(Math.random() * collection.length);
-      return [collection[randomIndex]];
+    // For shorter durations (15s, 30s), use a single text
+    if (duration <= 30) {
+      if (count === 1) {
+        const randomIndex = Math.floor(Math.random() * collection.length);
+        return [collection[randomIndex]];
+      }
+      
+      // Multiple texts without duplicates
+      const shuffled = [...collection].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, Math.min(count, collection.length));
     }
     
-    // Get multiple random texts without duplicates
-    const shuffled = [...collection].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(count, collection.length));
+    // For longer durations (60s, 120s), create larger texts
+    // Calculate how many texts we need based on duration and average reading speed
+    // Assume 40 WPM and 5 chars per word = 200 chars per minute
+    // So approx 3.33 chars per second, round to 5 for buffer
+    const neededChars = duration * 5;
+    const results: string[] = [];
+    
+    for (let i = 0; i < count; i++) {
+      // Create a shuffled copy of the collection for each result
+      const shuffled = [...collection].sort(() => 0.5 - Math.random());
+      let result = "";
+      let charCount = 0;
+      
+      // Keep adding texts until we have enough characters
+      while (charCount < neededChars) {
+        // If we've used all texts, reshuffle
+        if (shuffled.length === 0) {
+          shuffled.push(...[...collection].sort(() => 0.5 - Math.random()));
+        }
+        
+        // Get a text and add it
+        const nextText = shuffled.pop() || "";
+        if (result) result += " ";
+        result += nextText;
+        charCount = result.length;
+      }
+      
+      results.push(result);
+    }
+    
+    return results;
   }
 }
 
