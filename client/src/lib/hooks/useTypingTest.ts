@@ -219,9 +219,9 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         setTypingState(prev => ({ ...prev, text }));
       });
     }
-  }, [duration]);
+  }, [duration, typingState.isActive, typingState.mode]);
   
-  // End the test
+  // Define endTest first, before other useEffects that might call it
   const endTest = useCallback(() => {
     // Clear timer interval if exists
     if (intervalRef.current) {
@@ -293,37 +293,26 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     });
   }, [typingStats, typingState, duration, onComplete, mutate]);
   
-  // Timer effect
+  // Timer effect - going back to a simpler implementation
   useEffect(() => {
     // Only run timer when test is active with a valid start time
     if (typingState.isActive && typingState.startTime) {
       // Clear any existing timer first to avoid duplicates
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
       
       // Set up a new timer interval
       intervalRef.current = window.setInterval(() => {
-        // Using a function to update state ensures we have the latest state
         setTypingState(prev => {
-          // Don't decrement if already at zero
           if (prev.timeRemaining <= 0) {
-            // When time reaches zero, end the test
-            setTimeout(() => endTest(), 10);
-            return { ...prev, timeRemaining: 0 };
+            // Already at zero, don't keep decrementing
+            return prev;
           }
           
-          // Normal time decrement
           const newTimeRemaining = prev.timeRemaining - 1;
-          
-          // Check if we just hit zero
-          if (newTimeRemaining <= 0) {
-            // When time reaches zero, end the test
-            setTimeout(() => endTest(), 10);
-            return { ...prev, timeRemaining: 0 };
-          }
-          
-          return { ...prev, timeRemaining: newTimeRemaining };
+          return { ...prev, timeRemaining: Math.max(0, newTimeRemaining) };
         });
       }, 1000);
     }
@@ -335,7 +324,70 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         intervalRef.current = null;
       }
     };
-  }, [typingState.isActive, typingState.startTime, endTest]);
+  }, [typingState.isActive, typingState.startTime]);
+  
+  // Handle time expiration check without using endTest in a separate effect
+  useEffect(() => {
+    // We only care about the transition from 1 to 0 seconds while the test is active
+    if (typingState.isActive && typingState.timeRemaining === 0) {
+      // Use a local variable to prevent closure issues
+      const isActive = typingState.isActive;
+      const correctChars = [...typingState.correctChars];
+      const incorrectChars = [...typingState.incorrectChars];
+      const totalTyped = correctChars.length + incorrectChars.length;
+      const mode = typingState.mode;
+      
+      // Calculate stats for the result
+      let finalWpm = typingStats.wpm;
+      let finalAccuracy = typingStats.accuracy;
+      
+      // Handle edge case of no typing
+      if (totalTyped === 0) {
+        finalWpm = 0;
+        finalAccuracy = 0;
+      } else if (typingState.startTime !== null) {
+        // Double-check calculations
+        const elapsedMinutes = (Date.now() - typingState.startTime) / 60000;
+        if (elapsedMinutes > 0) {
+          const words = correctChars.length / 5;
+          finalWpm = Math.round(words / elapsedMinutes) || 0;
+          finalAccuracy = Math.round((correctChars.length / totalTyped) * 100) || 100;
+        }
+      }
+      
+      // Create result object
+      const result: TypingTestResult = {
+        wpm: finalWpm,
+        accuracy: finalAccuracy > 0 ? finalAccuracy : 0,
+        duration: duration, // Test completed due to time expiry
+        mode: mode,
+        characters: totalTyped,
+        errors: incorrectChars.length,
+      };
+      
+      // Save the result
+      mutate(result);
+      
+      // Send to parent
+      onComplete(result);
+      
+      // Reset test state
+      setTypingState(prev => ({
+        ...prev,
+        isActive: false,
+        currentPosition: 0,
+        correctChars: [],
+        incorrectChars: [],
+        startTime: null,
+        timeRemaining: duration,
+      }));
+      
+      // Get a new text for the next test
+      getTextForTest(typingState.mode, duration).then(text => {
+        setTypingState(prev => ({ ...prev, text }));
+      });
+    }
+  }, [typingState.timeRemaining, typingState.isActive, typingStats, typingState, duration, onComplete, mutate]);
   
 
   
@@ -374,8 +426,6 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       timeRemaining: duration,
     }));
   }, [duration]);
-  
-  // End the test
   
   // Reset the test
   const resetTest = useCallback(() => {
