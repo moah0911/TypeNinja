@@ -107,10 +107,6 @@ const TypingTest = forwardRef<TypingTestRef, TypingTestProps>(({ onTestComplete,
           onClick={handleTypingAreaClick}
           onKeyDown={handleKeyDown}
         />
-        
-        <div className="text-center text-secondary text-sm mt-4">
-          press <span className="text-accent font-mono px-1">ctrl</span> + <span className="text-accent font-mono px-1">enter</span> or <span className="text-accent font-mono px-1">alt</span> + <span className="text-accent font-mono px-1">enter</span> to restart test
-        </div>
       </div>
     </>
   );

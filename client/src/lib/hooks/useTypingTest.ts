@@ -516,6 +516,12 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
           return;
         }
         
+        // Play typing sound if enabled
+        if (settings.soundEnabled) {
+          const keySound = createKeySound();
+          keySound.play().catch(err => console.error("Could not play sound:", err));
+        }
+        
         setTypingState(prev => {
           const newState = { ...prev, currentPosition: prev.currentPosition + 1 };
           
@@ -535,6 +541,13 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         });
       } else if (e.key === 'Backspace') {
         // Handle backspace to delete the previous character
+        
+        // Play typing sound if enabled (also for backspace)
+        if (settings.soundEnabled) {
+          const keySound = createKeySound();
+          keySound.play().catch(err => console.error("Could not play sound:", err));
+        }
+        
         setTypingState(prev => {
           if (prev.currentPosition > 0) {
             const newPos = prev.currentPosition - 1;

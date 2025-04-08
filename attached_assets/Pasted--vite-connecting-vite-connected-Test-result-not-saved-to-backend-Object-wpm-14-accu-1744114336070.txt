@@ -1,0 +1,31 @@
+[vite] connecting...
+[vite] connected.
+Test result (not saved to backend): 
+Object {wpm: 14, accuracy: 25, duration: 30, mode: "normal", characters: 142, …}
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[vite] hot updated: /src/components/typing/TypingTest.tsx
+[vite] hot updated: /src/index.css?v=Ylwfu3BI6w5Hu1V2CQFs2
+[vite] hot updated: /src/components/typing/TypingTest.tsx
+[vite] hot updated: /src/index.css?v=Ylwfu3BI6w5Hu1V2CQFs2
+[vite] hot updated: /src/components/typing/TypingTest.tsx
+Could not play sound: 
+DOMException {code: 9, name: "NotSupportedError", message: "Failed to load because no supported source was found.", INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, …}
+
+at t.value (https://f4dcf456-f9d8-4af2-b455-5be87c2c463e-00-1gz4zo0dsx8gu.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://f4dcf456-f9d8-4af2-b455-5be87c2c463e-00-1gz4zo0dsx8gu.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://f4dcf456-f9d8-4af2-b455-5be87c2c463e-00-1gz4zo0dsx8gu.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://f4dcf456-f9d8-4af2-b455-5be87c2c463e-00-1gz4zo0dsx8gu.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Could not play sound: 
+DOMException {code: 9, name: "NotSupportedError", message: "Failed to load because no supported source was found.", INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, …}
+
+Could not play sound: 
+DOMException {code: 9, name: "NotSupportedError", message: "Failed to load because no supported source was found.", INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, …}
+
+Could not play sound: 
+DOMException {code: 9, name: "NotSupportedError", message: "Failed to load because no supported source was found.", INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, …}
+
+Could not play sound: 
+DOMException {code: 9, name: "NotSupportedError", message: "Failed to load because no supported source was found.", INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, …}
+
+Could not play sound: 
+DOMException {code: 9, name: "NotSupportedError", message: "Failed to load because no supported source was found.", INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, …}
