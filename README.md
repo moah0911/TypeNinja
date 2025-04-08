@@ -30,7 +30,7 @@ npm run dev
    - Name: typeninja (or your preferred name)
    - Environment: Node
    - Build Command: `npm install && npm run build`
-   - Start Command: `node dist/index.js || node server.js`
+   - Start Command: `npm start`
    - Environment Variables: Add `NODE_ENV=production`
 6. Click "Create Web Service"
 
