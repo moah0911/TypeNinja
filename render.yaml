@@ -7,3 +7,4 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # Render automatically sets PORT, so we don't need to specify it here

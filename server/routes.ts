@@ -7,6 +7,15 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint for Render
+  app.get("/health", (req, res) => {
+    res.status(200).json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      port: process.env.PORT || "default"
+    });
+  });
+
   // Get all typing tests (with optional userId filter)
   app.get("/api/typing-tests", async (req, res) => {
     try {

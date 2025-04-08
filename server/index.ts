@@ -56,27 +56,25 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Try port 5000 first, but use fallback ports if needed
-  // this serves both the API and the client
-  const tryPorts = [5000, 3000, 8000, 8080];
-  let currentPortIndex = 0;
-
-  function startServer(portIndex: number) {
-    const port = tryPorts[portIndex];
-    server.listen(port, "127.0.0.1", () => {
-      log(`serving on port ${port}`);
-    }).on('error', (err: NodeJS.ErrnoException) => {
-      if (err.code === 'EADDRINUSE' && portIndex < tryPorts.length - 1) {
-        // Try the next port in the list
-        log(`Port ${port} is in use, trying next port...`);
-        startServer(portIndex + 1);
-      } else {
-        // If all ports are in use or there's another error
-        console.error(`Failed to start server: ${err.message}`);
-        process.exit(1);
-      }
-    });
-  }
-
-  startServer(currentPortIndex);
+  // Use the PORT environment variable (for deployment) or fallback to local ports
+  const PORT = parseInt(process.env.PORT || '5000', 10);
+  
+  console.log(`Using PORT: ${PORT} (from env: ${process.env.PORT || 'not set'})`);
+  
+  // For deployment, we need to listen on 0.0.0.0 to accept connections from outside
+  const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+  
+  console.log(`Starting server on ${HOST}:${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  
+  // Use the correct overload for server.listen()
+  server.listen({
+    port: PORT,
+    host: HOST
+  }, () => {
+    console.log(`Server running in ${app.get('env')} mode on ${HOST}:${PORT}`);
+    log(`Server running in ${app.get('env')} mode on ${HOST}:${PORT}`);
+  }).on('error', (err: NodeJS.ErrnoException) => {
+    console.error(`Failed to start server: ${err.message}`);
+    process.exit(1);
+  });
 })();

@@ -7,7 +7,7 @@
     "dev": "tsx server/index.ts",
     "build": "vite build && npm run build:server",
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "postbuild": "echo '{\"type\": \"module\"}' > dist/package.json && ls -la dist",
+    "postbuild": "echo '{\"type\": \"module\"}' > dist/package.json && ls -la dist && npm run check",
     "start": "cross-env NODE_ENV=production node dist/index.js || node server.js",
     "check": "tsc",
     "db:push": "drizzle-kit push"
