@@ -293,29 +293,36 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     const correctCount = typingState.correctChars.length;
     const totalTyped = correctCount + typingState.incorrectChars.length;
     
-    // Only show results if user has actually typed something
-    if (totalTyped > 0) {
+    // Show results even if the user hasn't typed anything when time runs out
+    // (which would mean they get a 0 WPM result)
+    const timeExpired = typingState.timeRemaining <= 0;
+    const completedEarly = typingState.currentPosition >= typingState.text.length;
+    
+    // Always show results at least for time expiration, otherwise require typed characters
+    if (timeExpired || (totalTyped > 0 && completedEarly)) {
       let finalWpm = typingStats.wpm;
       let finalAccuracy = typingStats.accuracy;
       
-      // Recalculate final stats to ensure accuracy
-      if (typingState.startTime !== null) {
-        const elapsedMinutes = (Date.now() - typingState.startTime) / 60000;
-        if (elapsedMinutes > 0) {
-          const words = correctCount / 5;
-          finalWpm = Math.round(words / elapsedMinutes) || 0;
-          finalAccuracy = Math.round((correctCount / totalTyped) * 100) || 100;
+      // If no typing occurred, set to zeros
+      if (totalTyped === 0) {
+        finalWpm = 0;
+        finalAccuracy = 0;
+      } else {
+        // Recalculate final stats to ensure accuracy
+        if (typingState.startTime !== null) {
+          const elapsedMinutes = (Date.now() - typingState.startTime) / 60000;
+          if (elapsedMinutes > 0) {
+            const words = correctCount / 5;
+            finalWpm = Math.round(words / elapsedMinutes) || 0;
+            finalAccuracy = Math.round((correctCount / totalTyped) * 100) || 100;
+          }
         }
       }
-      
-      // Determine if the test was completed early (text fully typed) or timed out
-      const completedEarly = typingState.currentPosition >= typingState.text.length;
-      const timeExpired = typingState.timeRemaining <= 0;
       
       // Create result object
       const result: TypingTestResult = {
         wpm: finalWpm,
-        accuracy: finalAccuracy,
+        accuracy: finalAccuracy > 0 ? finalAccuracy : 0,
         duration: completedEarly ? duration - typingState.timeRemaining : duration, // Actual time used
         mode: typingState.mode,
         characters: totalTyped,

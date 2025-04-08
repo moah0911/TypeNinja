@@ -18,7 +18,7 @@ export default function Header({ onSettingsClick }: HeaderProps) {
           <div className="flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer">
             <Keyboard className="h-7 w-7 text-accent" />
             <div className="flex flex-col">
-              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent/80">RapidType</span>
+              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent/80">FlexType</span>
               <span className="text-xs text-secondary leading-none">Type faster, code better</span>
             </div>
           </div>
