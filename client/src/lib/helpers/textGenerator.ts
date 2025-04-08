@@ -78,24 +78,32 @@ export async function getRandomText(mode: string, duration: number = 30): Promis
   
   // More precise character targets based on test duration
   // Using a baseline of 40 WPM typing speed and 5 chars per word
-  // For 15s → ~50 chars, 30s → ~100 chars, 60s → ~200 chars, 120s → ~400 chars
-  // Add a buffer for varying typing speeds
+  // For a 40 WPM typing speed:
+  // 15s test = 10 words = 50 chars
+  // 30s test = 20 words = 100 chars
+  // 60s test = 40 words = 200 chars
+  // 120s test = 80 words = 400 chars
+  // Add a 50% buffer for faster typists (~60 WPM)
   let targetLength: number;
   switch (duration) {
     case 15:
-      targetLength = 75; // 15s
+      targetLength = 75; // 15s test (50 chars + 50% buffer)
       break;
     case 30:
-      targetLength = 150; // 30s
+      targetLength = 150; // 30s test (100 chars + 50% buffer)
       break;
     case 60:
-      targetLength = 300; // 60s
+      targetLength = 300; // 60s test (200 chars + 50% buffer)
       break;
     case 120:
-      targetLength = 600; // 120s
+      targetLength = 600; // 120s test (400 chars + 50% buffer)
       break;
     default:
-      targetLength = duration * 5; // Fallback
+      // For any other duration, calculate appropriately
+      // 40 WPM = 40 * 5 chars per minute = 200 chars per minute
+      // = (200/60) * duration = 3.33 * duration
+      // With 50% buffer = 3.33 * 1.5 * duration = 5 * duration
+      targetLength = Math.round(duration * 5);
   }
   
   // For very short tests (15s), just use a single paragraph without concatenation

@@ -40,6 +40,9 @@ keySound.volume = 0.5;
 // Global text cache (shared between instances)
 const textCache: TextCache = {};
 
+// Global lock to prevent multiple concurrent text fetches that might cause text changes
+const fetchLock = { isLocked: false };
+
 // List of all available modes for preloading
 const ALL_MODES = ["normal", "flirty", "developer", "python", "java", "csharp", "go"];
 const ALL_DURATIONS = [15, 30, 60, 120];
@@ -121,6 +124,18 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
   
   // Get text from cache or fetch new one
   const getTextForTest = async (mode: string, testDuration: number) => {
+    // Check if we're already fetching text
+    if (fetchLock.isLocked) {
+      // Wait a bit and try again if someone else is fetching
+      return new Promise<string>(resolve => {
+        setTimeout(() => {
+          getTextForTest(mode, testDuration).then(resolve);
+        }, 200);
+      });
+    }
+    
+    // Set the lock to prevent multiple concurrent fetches
+    fetchLock.isLocked = true;
     setLoadingText(true);
     
     try {
@@ -129,12 +144,16 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         // Get a text and remove it from the cache
         const text = textCache[mode][testDuration].pop()!;
         
-        // Replenish cache in the background
-        if (textCache[mode][testDuration].length < 2) {
-          preloadMode(mode, testDuration);
-        }
+        // Replenish cache in the background AFTER we've returned the text
+        // This prevents other API calls from happening during text rendering
+        setTimeout(() => {
+          if (textCache[mode][testDuration].length < 2) {
+            preloadMode(mode, testDuration);
+          }
+        }, 500);
         
         setLoadingText(false);
+        fetchLock.isLocked = false;
         return text;
       }
       
@@ -144,9 +163,13 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         if (response.ok) {
           const texts = await response.json();
           if (Array.isArray(texts) && texts.length > 0) {
-            // Start preloading more in the background
-            preloadMode(mode, testDuration);
+            // Start preloading more in the background AFTER returning
+            setTimeout(() => {
+              preloadMode(mode, testDuration);
+            }, 500);
+            
             setLoadingText(false);
+            fetchLock.isLocked = false;
             return texts[0];
           }
         }
@@ -157,10 +180,12 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       // Fallback to client-side generator
       const text = await getRandomText(mode, testDuration);
       setLoadingText(false);
+      fetchLock.isLocked = false;
       return text;
     } catch (error) {
       console.error("Error getting text:", error);
       setLoadingText(false);
+      fetchLock.isLocked = false;
       return "Text loading failed. Click to try again.";
     }
   };
