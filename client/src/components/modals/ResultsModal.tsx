@@ -14,9 +14,10 @@ interface ResultsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   result: TypingTestResult | null;
+  onAfterClose?: () => void;
 }
 
-export function ResultsModal({ open, onOpenChange, result }: ResultsModalProps) {
+export function ResultsModal({ open, onOpenChange, result, onAfterClose }: ResultsModalProps) {
   // Animation states for counting up
   const [animatedWpm, setAnimatedWpm] = useState(0);
   const [animatedAccuracy, setAnimatedAccuracy] = useState(0);
@@ -24,6 +25,14 @@ export function ResultsModal({ open, onOpenChange, result }: ResultsModalProps) 
   const [animatedCorrect, setAnimatedCorrect] = useState(0);
   const [animatedErrors, setAnimatedErrors] = useState(0);
   
+  // Handle modal close event to load new text
+  useEffect(() => {
+    // When modal is closed, trigger the callback to load new text
+    if (!open && onAfterClose) {
+      onAfterClose();
+    }
+  }, [open, onAfterClose]);
+
   // Start counting animation when modal opens
   useEffect(() => {
     if (open && result) {

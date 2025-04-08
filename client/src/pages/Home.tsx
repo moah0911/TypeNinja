@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Header from "@/components/Header";
 import TypingTest from "@/components/typing/TypingTest";
 import { ResultsModal } from "@/components/modals/ResultsModal";
@@ -6,15 +6,28 @@ import { FlirtyModePreview } from "@/components/modals/FlirtyModePreview";
 import { DeveloperModePreview } from "@/components/modals/DeveloperModePreview";
 import { TypingTestResult } from "@/types";
 
+// Define the interface for the TypingTest component instance
+interface TypingTestRef {
+  resetTest: () => void;
+  loadNewText: () => void;
+}
+
 export default function Home() {
   const [resultModalOpen, setResultModalOpen] = useState(false);
   const [flirtyPreviewOpen, setFlirtyPreviewOpen] = useState(false);
   const [devPreviewOpen, setDevPreviewOpen] = useState(false);
   const [testResult, setTestResult] = useState<TypingTestResult | null>(null);
+  const typingTestRef = useRef<TypingTestRef>(null);
 
   const handleTestComplete = (result: TypingTestResult) => {
     setTestResult(result);
     setResultModalOpen(true);
+  };
+  
+  // Handle modal closure to load a new text
+  const handleResultsModalClose = () => {
+    // Only load new text when the results modal is closed
+    typingTestRef.current?.loadNewText();
   };
 
   const handleOpenModePreview = (mode: string) => {
@@ -38,6 +51,7 @@ export default function Home() {
       
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10">
         <TypingTest 
+          ref={typingTestRef}
           onTestComplete={handleTestComplete} 
           onModePreviewRequest={handleOpenModePreview}
         />
@@ -46,7 +60,8 @@ export default function Home() {
       <ResultsModal 
         open={resultModalOpen} 
         onOpenChange={setResultModalOpen} 
-        result={testResult} 
+        result={testResult}
+        onAfterClose={handleResultsModalClose}
       />
       
       <FlirtyModePreview 

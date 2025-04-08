@@ -291,10 +291,8 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       timeRemaining: duration,
     }));
     
-    // Get a new text ready for the next test
-    getTextForTest(typingState.mode, duration).then(text => {
-      setTypingState(prev => ({ ...prev, text }));
-    });
+    // We'll wait to load a new text until the user closes the results modal
+    // This prevents a new text from loading immediately after the test completes
   }, [typingStats, typingState, duration, onComplete, mutate]);
   
   // Timer effect - going back to a simpler implementation
@@ -386,10 +384,8 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         timeRemaining: duration,
       }));
       
-      // Get a new text for the next test
-      getTextForTest(typingState.mode, duration).then(text => {
-        setTypingState(prev => ({ ...prev, text }));
-      });
+      // We'll wait to load a new text until the user closes the results modal
+      // This prevents a new text from loading immediately after the test completes
     }
   }, [typingState.timeRemaining, typingState.isActive, typingStats, typingState, duration, onComplete, mutate]);
   
@@ -594,6 +590,13 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
   
 
   
+  // Function to load a new text for the current mode
+  const loadNewText = useCallback(() => {
+    getTextForTest(typingState.mode, duration).then(text => {
+      setTypingState(prev => ({ ...prev, text }));
+    });
+  }, [typingState.mode, duration]);
+  
   return {
     typingState,
     typingStats,
@@ -602,5 +605,6 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     resetTest,
     changeMode,
     loadingText,
+    loadNewText,
   };
 }

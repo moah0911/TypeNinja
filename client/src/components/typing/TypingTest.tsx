@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import TestInfo from "./TestInfo";
 import ModeSelector from "./ModeSelector";
 import TextDisplay from "./TextDisplay";
 import { useTypingTest } from "@/lib/hooks/useTypingTest";
 import { TypingTestResult } from "@/types";
 
+// Export the ref type for use in parent components
+export interface TypingTestRef {
+  resetTest: () => void;
+  loadNewText: () => void;
+}
+
 interface TypingTestProps {
   onTestComplete: (result: TypingTestResult) => void;
   onModePreviewRequest: (mode: string) => void;
 }
 
-export default function TypingTest({ onTestComplete, onModePreviewRequest }: TypingTestProps) {
+const TypingTest = forwardRef<TypingTestRef, TypingTestProps>(({ onTestComplete, onModePreviewRequest }, ref) => {
   const [selectedDuration, setSelectedDuration] = useState(30);
   
   const {
@@ -21,10 +27,17 @@ export default function TypingTest({ onTestComplete, onModePreviewRequest }: Typ
     resetTest,
     changeMode,
     loadingText,
+    loadNewText
   } = useTypingTest({
     duration: selectedDuration,
     onComplete: onTestComplete,
   });
+  
+  // Expose methods to parent component via ref
+  useImperativeHandle(ref, () => ({
+    resetTest,
+    loadNewText
+  }));
 
   const handleDurationChange = (duration: number) => {
     // Only update if the duration actually changed
@@ -101,4 +114,6 @@ export default function TypingTest({ onTestComplete, onModePreviewRequest }: Typ
       </div>
     </>
   );
-}
+});
+
+export default TypingTest;
