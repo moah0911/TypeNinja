@@ -27,8 +27,16 @@ export default function TypingTest({ onTestComplete, onModePreviewRequest }: Typ
   });
 
   const handleDurationChange = (duration: number) => {
-    setSelectedDuration(duration);
-    resetTest();
+    // Only update if the duration actually changed
+    if (duration !== selectedDuration) {
+      setSelectedDuration(duration);
+      // Force the test to reset with the new duration
+      resetTest();
+    } else {
+      // If user clicks the same duration again, force a reset anyway
+      // This helps ensure text length is appropriate
+      resetTest();
+    }
   };
 
   const handleModeChange = (mode: string) => {

@@ -206,13 +206,18 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     }
   }, []);
   
-  // Update timer when duration changes
+  // Update timer and text when duration changes
   useEffect(() => {
     if (!typingState.isActive) {
       setTypingState(prev => ({
         ...prev, 
         timeRemaining: duration
       }));
+      
+      // When duration changes and test is not active, also get new text with proper length
+      getTextForTest(typingState.mode, duration).then(text => {
+        setTypingState(prev => ({ ...prev, text }));
+      });
     }
   }, [duration]);
   
@@ -278,6 +283,7 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
   
   // End the test
   const endTest = useCallback(() => {
+    // Clear timer interval if exists
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -287,7 +293,7 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     const correctCount = typingState.correctChars.length;
     const totalTyped = correctCount + typingState.incorrectChars.length;
     
-    // Only end test if user has actually typed something
+    // Only show results if user has actually typed something
     if (totalTyped > 0) {
       let finalWpm = typingStats.wpm;
       let finalAccuracy = typingStats.accuracy;
@@ -302,10 +308,15 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
         }
       }
       
+      // Determine if the test was completed early (text fully typed) or timed out
+      const completedEarly = typingState.currentPosition >= typingState.text.length;
+      const timeExpired = typingState.timeRemaining <= 0;
+      
+      // Create result object
       const result: TypingTestResult = {
         wpm: finalWpm,
         accuracy: finalAccuracy,
-        duration,
+        duration: completedEarly ? duration - typingState.timeRemaining : duration, // Actual time used
         mode: typingState.mode,
         characters: totalTyped,
         errors: typingState.incorrectChars.length,
@@ -314,7 +325,7 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       // Save the result to API
       mutate(result);
       
-      // Notify parent component
+      // Notify parent component to show results
       onComplete(result);
     }
     
