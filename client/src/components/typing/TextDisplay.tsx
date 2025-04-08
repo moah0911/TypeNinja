@@ -1,4 +1,4 @@
-import { KeyboardEvent, useRef, useEffect } from "react";
+import { KeyboardEvent, useRef, useEffect, Fragment } from "react";
 import { Loader2, MousePointer, Keyboard } from "lucide-react";
 
 interface TextDisplayProps {
@@ -31,29 +31,70 @@ export default function TextDisplay({
     }
   }, [text]);
   
-  // Render each character with proper class
+  // Render by words to prevent breaking words at line ends
   const renderChars = () => {
-    return text.split('').map((char, index) => {
-      let className = "char";
+    // First split the text into words and spaces
+    const words = text.split(/(\s+)/);
+    let charIndex = 0;
+    
+    return words.map((word, wordIdx) => {
+      // For each word, create a wrapper span
+      const wordChars = word.split('');
       
-      if (index === currentPosition) {
-        className += " current";
-      } else if (index < currentPosition) {
-        if (correctChars.includes(index)) {
-          className += " correct";
-        } else if (incorrectChars.includes(index)) {
-          className += " incorrect";
-        }
+      // Check if it's a space or newline
+      if (word === ' ' || word === '\n' || /^\s+$/.test(word)) {
+        const chars = wordChars.map((char, idx) => {
+          const index = charIndex + idx;
+          let className = "char";
+          
+          if (index === currentPosition) {
+            className += " current";
+          } else if (index < currentPosition) {
+            if (correctChars.includes(index)) {
+              className += " correct";
+            } else if (incorrectChars.includes(index)) {
+              className += " incorrect";
+            }
+          }
+          
+          // Handle spaces in a way that makes them visible
+          if (char === ' ') {
+            return <span key={index} className={className}>&nbsp;</span>;
+          } else if (char === '\n') {
+            return <br key={index} />;
+          }
+          
+          return <span key={index} className={className}>{char}</span>;
+        });
+        
+        charIndex += wordChars.length;
+        return <Fragment key={`word-${wordIdx}`}>{chars}</Fragment>;
       }
       
-      // Handle spaces in a way that makes them visible
-      if (char === ' ') {
-        return <span key={index} className={className}>&nbsp;</span>;
-      } else if (char === '\n') {
-        return <br key={index} />;
-      }
+      // If it's a normal word, wrap it in a non-breaking span
+      const wordSpan = (
+        <span key={`word-${wordIdx}`} className="word whitespace-nowrap inline-block">
+          {wordChars.map((char, idx) => {
+            const index = charIndex + idx;
+            let className = "char";
+            
+            if (index === currentPosition) {
+              className += " current";
+            } else if (index < currentPosition) {
+              if (correctChars.includes(index)) {
+                className += " correct";
+              } else if (incorrectChars.includes(index)) {
+                className += " incorrect";
+              }
+            }
+            
+            return <span key={index} className={className}>{char}</span>;
+          })}
+        </span>
+      );
       
-      return <span key={index} className={className}>{char}</span>;
+      charIndex += wordChars.length;
+      return wordSpan;
     });
   };
   
