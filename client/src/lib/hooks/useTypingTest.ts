@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback, KeyboardEvent, useRef } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { getRandomText } from "@/lib/helpers/textGenerator";
 import { TypingTestResult } from "@/types";
 import { useSettings } from "./useSettings";
@@ -190,12 +188,11 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     }
   };
   
-  // Save test result mutation
-  const { mutate } = useMutation({
-    mutationFn: async (data: TypingTestResult) => {
-      return await apiRequest("POST", "/api/typing-tests", data);
-    },
-  });
+  // No backend data saving - just a simple function for compatibility
+  const mutate = (data: TypingTestResult) => {
+    // Just log the result - no backend saving
+    console.log("Test result (not saved to backend):", data);
+  };
   
   // Load initial text
   useEffect(() => {
