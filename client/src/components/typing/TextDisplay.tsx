@@ -31,70 +31,50 @@ export default function TextDisplay({
     }
   }, [text]);
   
-  // Render by words to prevent breaking words at line ends
+  // Render characters with proper classes
   const renderChars = () => {
-    // First split the text into words and spaces
-    const words = text.split(/(\s+)/);
+    // Split text by words
+    const words = text.split(' ');
     let charIndex = 0;
     
     return words.map((word, wordIdx) => {
-      // For each word, create a wrapper span
-      const wordChars = word.split('');
+      const wordWithSpace = wordIdx < words.length - 1 ? word + ' ' : word;
+      const chars = [];
       
-      // Check if it's a space or newline
-      if (word === ' ' || word === '\n' || /^\s+$/.test(word)) {
-        const chars = wordChars.map((char, idx) => {
-          const index = charIndex + idx;
-          let className = "char";
-          
-          if (index === currentPosition) {
-            className += " current";
-          } else if (index < currentPosition) {
-            if (correctChars.includes(index)) {
-              className += " correct";
-            } else if (incorrectChars.includes(index)) {
-              className += " incorrect";
-            }
-          }
-          
-          // Handle spaces in a way that makes them visible
-          if (char === ' ') {
-            return <span key={index} className={className}>&nbsp;</span>;
-          } else if (char === '\n') {
-            return <br key={index} />;
-          }
-          
-          return <span key={index} className={className}>{char}</span>;
-        });
+      // Process each character in the word
+      for (let i = 0; i < wordWithSpace.length; i++) {
+        const char = wordWithSpace[i];
+        const index = charIndex + i;
+        let className = "char";
         
-        charIndex += wordChars.length;
-        return <Fragment key={`word-${wordIdx}`}>{chars}</Fragment>;
+        if (index === currentPosition) {
+          className += " current";
+        } else if (index < currentPosition) {
+          if (correctChars.includes(index)) {
+            className += " correct";
+          } else if (incorrectChars.includes(index)) {
+            className += " incorrect";
+          }
+        }
+        
+        // Handle spaces
+        if (char === ' ') {
+          chars.push(<span key={index} className={className}>&nbsp;</span>);
+        } else if (char === '\n') {
+          chars.push(<br key={index} />);
+        } else {
+          chars.push(<span key={index} className={className}>{char}</span>);
+        }
       }
       
-      // If it's a normal word, wrap it in a non-breaking span
-      const wordSpan = (
-        <span key={`word-${wordIdx}`} className="word whitespace-nowrap inline-block">
-          {wordChars.map((char, idx) => {
-            const index = charIndex + idx;
-            let className = "char";
-            
-            if (index === currentPosition) {
-              className += " current";
-            } else if (index < currentPosition) {
-              if (correctChars.includes(index)) {
-                className += " correct";
-              } else if (incorrectChars.includes(index)) {
-                className += " incorrect";
-              }
-            }
-            
-            return <span key={index} className={className}>{char}</span>;
-          })}
+      charIndex += wordWithSpace.length;
+      
+      // Wrap each word in a non-breaking span
+      return (
+        <span key={`word-${wordIdx}`} className="word inline-block whitespace-nowrap mr-[0.1px]">
+          {chars}
         </span>
       );
-      
-      charIndex += wordChars.length;
-      return wordSpan;
     });
   };
   

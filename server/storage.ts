@@ -19,7 +19,22 @@ const textCollections = {
     "Crazy Fredrick bought many very exquisite opal jewels.",
     "The five boxing wizards jump quickly.",
     "Jinxed wizards pluck ivy from the big quilt.",
-    "Waltz, bad nymph, for quick jigs vex."
+    "Waltz, bad nymph, for quick jigs vex.",
+    "Jackdaws love my big sphinx of quartz.",
+    "The job requires extra pluck and zeal from every young wage earner.",
+    "Six big devils from Japan quickly forgot how to waltz.",
+    "We promptly judged antique ivory buckles for the next prize.",
+    "Fix problem quickly with galvanized jets.",
+    "Just keep examining every low bid quoted for zinc etchings.",
+    "Five quacking zephyrs jolt my wax bed.",
+    "Grumpy wizards make toxic brew for the evil queen and jack.",
+    "The jay, pig, fox, zebra, and my wolves quack!",
+    "Quick zephyrs blow, vexing daft Jim.",
+    "Public junk dwarves hug my quartz fox.",
+    "Five or six big jet planes zoomed quickly by the tower.",
+    "My girl wove six dozen plaid jackets before she quit.",
+    "The wizard quickly jinxed the gnomes before they vaporized.",
+    "Playing jazz vibe chords quickly excites my wife."
   ],
   flirty: [
     "Your eyes are like stars, shining brightly in the night sky, guiding me home.",
@@ -31,7 +46,22 @@ const textCollections = {
     "Your presence in my life is like finding a rare gem in a field of stones.",
     "If kisses were snowflakes, I'd send you a blizzard of affection.",
     "My heart beats a special rhythm whenever you're near, a song only you can inspire.",
-    "Like a butterfly drawn to a beautiful flower, I'm captivated by your charm and grace."
+    "Like a butterfly drawn to a beautiful flower, I'm captivated by your charm and grace.",
+    "Your voice is the gentle whisper that calms the storm in my mind.",
+    "The way you say my name makes my heart skip a beat every single time.",
+    "I love the way we fit together perfectly, like two pieces of a beautiful puzzle.",
+    "Your beauty isn't just what I see on the outside, it's the kindness that radiates from within.",
+    "Being with you feels like coming home to a place I've always belonged.",
+    "When you smile at me, it feels like the sun breaking through clouds on a rainy day.",
+    "I could get lost in your eyes forever and consider it time well spent.",
+    "Every text from you makes my day brighter, no matter how simple the message.",
+    "The chemistry between us is like a perfect recipe—sweet, spicy, and absolutely delicious.",
+    "I never believed in perfect matches until I met someone as amazing as you.",
+    "When we're apart, I find myself counting the minutes until I see you again.",
+    "Your hugs feel like the safest place in the world, somewhere I never want to leave.",
+    "The way your hand fits in mine feels like it was designed just for me to hold.",
+    "You're the first thing I think about when I wake up and the last thing on my mind before sleep.",
+    "The universe must have conspired to bring us together; how else could we be so perfect for each other?"
   ],
   // JavaScript code examples
   developer: [
