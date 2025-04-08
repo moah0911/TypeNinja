@@ -19,10 +19,10 @@ export default function Header() {
           onClick={navigateToHome}
           className="flex items-center gap-3 hover:opacity-90 transition-opacity cursor-pointer"
         >
-          <Keyboard className="h-8 w-8 text-accent animate-pulse" />
+          <Keyboard className="h-8 w-8 text-sky-400 animate-pulse" />
           <div className="flex flex-col">
-            <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500">Type Your Flex</span>
-            <span className="text-xs text-secondary leading-none mt-1">Show off your keyboard skills with style</span>
+            <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-cyan-500">FlexType</span>
+            <span className="text-xs text-secondary leading-none mt-1">Master the keyboard, showcase your skills</span>
           </div>
         </div>
       </div>

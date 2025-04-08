@@ -151,8 +151,8 @@ export function ResultsModal({ open, onOpenChange, result }: ResultsModalProps) 
       <DialogContent className="bg-gradient-to-b from-background-secondary to-background max-w-lg border-accent/20">
         <DialogHeader className="flex flex-row justify-between items-center border-b border-accent/10 pb-3">
           <DialogTitle className="text-3xl font-bold text-foreground flex items-center gap-2">
-            <Award className="h-7 w-7 text-accent" /> 
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent/70">Type Your Flex</span>
+            <Award className="h-7 w-7 text-sky-400" /> 
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-cyan-500">FlexType</span>
           </DialogTitle>
           <DialogClose asChild>
             <button className="text-secondary hover:text-accent transition-colors">
