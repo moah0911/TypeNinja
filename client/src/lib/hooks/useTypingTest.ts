@@ -221,66 +221,6 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     }
   }, [duration]);
   
-  // Timer effect
-  useEffect(() => {
-    if (typingState.isActive && typingState.startTime) {
-      intervalRef.current = window.setInterval(() => {
-        setTypingState(prev => {
-          const newTimeRemaining = prev.timeRemaining - 1;
-          
-          if (newTimeRemaining <= 0) {
-            endTest();
-            return { ...prev, timeRemaining: 0 };
-          }
-          
-          return { ...prev, timeRemaining: newTimeRemaining };
-        });
-      }, 1000);
-    }
-    
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [typingState.isActive, typingState.startTime]);
-  
-  // Live stats calculation (optimized to update every 100ms instead of on every keystroke)
-  useEffect(() => {
-    if (typingState.isActive && typingState.startTime !== null) {
-      const statsInterval = setInterval(() => {
-        const correctCount = typingState.correctChars.length;
-        const totalTyped = correctCount + typingState.incorrectChars.length;
-        
-        if (totalTyped > 0) {
-          // Calculate WPM
-          const elapsedMinutes = typingState.startTime !== null ? (Date.now() - typingState.startTime) / 60000 : 0;
-          if (elapsedMinutes > 0) {
-            const words = correctCount / 5; // Standard: 5 chars = 1 word
-            const wpm = Math.round(words / elapsedMinutes) || 0;
-            
-            // Calculate accuracy
-            const accuracy = Math.round((correctCount / totalTyped) * 100) || 100;
-            
-            setTypingStats({ wpm, accuracy });
-          }
-        }
-      }, 100);
-      
-      return () => clearInterval(statsInterval);
-    }
-  }, [typingState.isActive, typingState.startTime, typingState.correctChars.length, typingState.incorrectChars.length]);
-  
-  // Start the test
-  const startTest = useCallback(() => {
-    setTypingState(prev => ({
-      ...prev,
-      isActive: true,
-      startTime: Date.now(),
-      timeRemaining: duration,
-    }));
-  }, [duration]);
-  
   // End the test
   const endTest = useCallback(() => {
     // Clear timer interval if exists
@@ -352,6 +292,90 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       setTypingState(prev => ({ ...prev, text }));
     });
   }, [typingStats, typingState, duration, onComplete, mutate]);
+  
+  // Timer effect
+  useEffect(() => {
+    // Only run timer when test is active with a valid start time
+    if (typingState.isActive && typingState.startTime) {
+      // Clear any existing timer first to avoid duplicates
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      
+      // Set up a new timer interval
+      intervalRef.current = window.setInterval(() => {
+        // Using a function to update state ensures we have the latest state
+        setTypingState(prev => {
+          // Don't decrement if already at zero
+          if (prev.timeRemaining <= 0) {
+            // When time reaches zero, end the test
+            setTimeout(() => endTest(), 10);
+            return { ...prev, timeRemaining: 0 };
+          }
+          
+          // Normal time decrement
+          const newTimeRemaining = prev.timeRemaining - 1;
+          
+          // Check if we just hit zero
+          if (newTimeRemaining <= 0) {
+            // When time reaches zero, end the test
+            setTimeout(() => endTest(), 10);
+            return { ...prev, timeRemaining: 0 };
+          }
+          
+          return { ...prev, timeRemaining: newTimeRemaining };
+        });
+      }, 1000);
+    }
+    
+    // Cleanup function
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [typingState.isActive, typingState.startTime, endTest]);
+  
+
+  
+  // Live stats calculation (optimized to update every 100ms instead of on every keystroke)
+  useEffect(() => {
+    if (typingState.isActive && typingState.startTime !== null) {
+      const statsInterval = setInterval(() => {
+        const correctCount = typingState.correctChars.length;
+        const totalTyped = correctCount + typingState.incorrectChars.length;
+        
+        if (totalTyped > 0) {
+          // Calculate WPM
+          const elapsedMinutes = typingState.startTime !== null ? (Date.now() - typingState.startTime) / 60000 : 0;
+          if (elapsedMinutes > 0) {
+            const words = correctCount / 5; // Standard: 5 chars = 1 word
+            const wpm = Math.round(words / elapsedMinutes) || 0;
+            
+            // Calculate accuracy
+            const accuracy = Math.round((correctCount / totalTyped) * 100) || 100;
+            
+            setTypingStats({ wpm, accuracy });
+          }
+        }
+      }, 100);
+      
+      return () => clearInterval(statsInterval);
+    }
+  }, [typingState.isActive, typingState.startTime, typingState.correctChars.length, typingState.incorrectChars.length]);
+  
+  // Start the test
+  const startTest = useCallback(() => {
+    setTypingState(prev => ({
+      ...prev,
+      isActive: true,
+      startTime: Date.now(),
+      timeRemaining: duration,
+    }));
+  }, [duration]);
+  
+  // End the test
   
   // Reset the test
   const resetTest = useCallback(() => {
@@ -509,6 +533,8 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       startTest();
     }
   }, [typingState.isActive, startTest]);
+  
+
   
   return {
     typingState,
