@@ -32,9 +32,30 @@ export default function TypingTest({ onTestComplete, onModePreviewRequest }: Typ
   };
 
   const handleModeChange = (mode: string) => {
-    if ((mode === "flirty" || mode === "developer") && typingState.mode !== mode) {
+    // Show preview for flirty mode
+    if (mode === "flirty" && typingState.mode !== mode) {
       onModePreviewRequest(mode);
     }
+    
+    // Show developer mode preview for any programming language selection
+    // if not already in a programming language mode
+    const isDeveloperMode = (mode === "developer" || 
+                             mode === "python" || 
+                             mode === "java" || 
+                             mode === "csharp" || 
+                             mode === "go");
+                             
+    const wasAlreadyInDeveloperMode = (typingState.mode === "developer" || 
+                                       typingState.mode === "python" || 
+                                       typingState.mode === "java" || 
+                                       typingState.mode === "csharp" || 
+                                       typingState.mode === "go");
+    
+    // Only show preview if switching to developer mode from a non-developer mode
+    if (isDeveloperMode && !wasAlreadyInDeveloperMode) {
+      onModePreviewRequest("developer");
+    }
+    
     changeMode(mode);
   };
   
