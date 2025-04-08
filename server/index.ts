@@ -63,12 +63,7 @@ app.use((req, res, next) => {
 
   function startServer(portIndex: number) {
     const port = tryPorts[portIndex];
-    server.listen({
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-      hostname: "0.0.0.0",
-    }, () => {
+    server.listen(port, "127.0.0.1", () => {
       log(`serving on port ${port}`);
     }).on('error', (err: NodeJS.ErrnoException) => {
       if (err.code === 'EADDRINUSE' && portIndex < tryPorts.length - 1) {

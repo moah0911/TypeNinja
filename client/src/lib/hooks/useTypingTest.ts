@@ -31,14 +31,46 @@ interface TextCache {
   }
 }
 
-// Audio setup - use base64 encoded sound to avoid external dependencies
+// Audio setup - use better keyboard sounds
+// Mechanical keyboard sound (short click)
 const TYPING_SOUND_BASE64 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAeHh4eHh4eHh4eHh4eHiNjY2NjY2NjY2NjY2Njaqqqqqqqqqqqqqqqqqqx8fHx8fHx8fHx8fHx8f///////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAYAAAAAAAAAAbAwjDrEAAAAAAD/+0DEAAAGBKNz9BEAJPhUrn80IAC5FGksBAIBABAKIiO5+c53tPBwMBgMBglCUJQlCQAAJQlCUJc+c/////Lnc/////+c9znPBAMBAIAwAJcUi8MpO0kwS8pc7N9szG0ITuLS4jdYgPEqRCYbLEYhKVKUo6aoYm6YJxGPQqKCdpimEw0p5HRU1NVVUEfBN0wgm6CfoqUE3qKio+jkE3KVOi1FKnKnKmqdRVOqyFRFSioqmqbYiD2KyaUkqFRZqiV/9bL/+0LEBgAIEVtp56RviQWrbD2HjfHlP1TWpUqVLU//1f/USSokDEpMjkqlTTyGRyHJJJFSipRJJ7ERLh0BAMBAMDAAMDAQDAxFNQACAYGJgADAwMQAwbOsCgBgIgBm1MASAGCSAGAaAGAKgBwEoBgYCdZ0aOXIUVf////z3957rymta1rWOuc9rWOt7QYCABn//1xAADAwEAwMBIAMDAQAwMBEAMDASADA59EAJ//6qABiqbXf/Sas1jGv+1rWtZKZxjrnGMYxrGsa5/zn/9a5z2ta7/rWta12ta//+0LEC4AKBV9l7CRvQXGrbD2HlehhADASADAwEAACAYACAAYCABgCABOe4lQADFDr3/1VVVVXet///5znOc5zv//////////////wiABioAXJkACYIgCYOoCYKYBYFABYHICYHYCgFgEwMAOTRAUwJwDl4TCGAqA+AiASAcAUAYAD/w+goALAJgKgHgGAK//////////9a1rWta1rWvOc5znOc5znP//////////////8YxjGMYxjGMYxjGMYxjGMYxrGsa//tCxA4AClVbY+wkbwlNq2v9h43xjGMYxjGMYxjnOc5znOc5znOc5zXOc5znOc5znMa5rWtYxrWtd7Wtd7Wtd7WtYxrWtYxjGMYsYxYxYxYxYAAAAAAAQAAAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tCxBUAClVbYewkbwkiquw9lI2BVVVVVVVVVVVVVVVMQQRAMCRAMBEAMDAQADASAAAAgGAgAGBgIgBgYCQAYGAlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQZgAowgWOMJG/RSjAsAYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQfAAo0gV2MJGspQZBrMYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==";
 
-// Audio setup
+// Backspace sound (slightly different)
+const BACKSPACE_SOUND_BASE64 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAeHh4eHh4eHh4eHh4eHiNjY2NjY2NjY2NjY2Njaqqqqqqqqqqqqqqqqqqx8fHx8fHx8fHx8fHx8f///////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAYAAAAAAAAAAbAwjDrEAAAAAAD/+0DEAAAGBKNz9BEAJPhUrn80IAC5FGksBAIBABAKIiO5+c53tPBwMBgMBglCUJQlCQAAJQlCUJc+c/////Lnc/////+c9znPBAMBAIAwAJcUi8MpO0kwS8pc7N9szG0ITuLS4jdYgPEqRCYbLEYhKVKUo6aoYm6YJxGPQqKCdpimEw0p5HRU1NVVUEfBN0wgm6CfoqUE3qKio+jkE3KVOi1FKnKnKmqdRVOqyFRFSioqmqbYiD2KyaUkqFRZqiV/9bL/+0LEBgAIEVtp56RviQWrbD2HjfHlP1TWpUqVLU//1f/USSokDEpMjkqlTTyGRyHJJJFSipRJJ7ERLh0BAMBAMDAAMDAQDAxFNQACAYGJgADAwMQAwbOsCgBgIgBm1MASAGCSAGAaAGAKgBwEoBgYCdZ0aOXIUVf////z3957rymta1rWOuc9rWOt7QYCABn//1xAADAwEAwMBIAMDAQAwMBEAMDASADA59EAJ//6qABiqbXf/Sas1jGv+1rWtZKZxjrnGMYxrGsa5/zn/9a5z2ta7/rWta12ta//+0LEC4AKBV9l7CRvQXGrbD2HlehhADASADAwEAACAYACAAYCABgCABOe4lQADFDr3/1VVVVXet///5znOc5zv//////////////wiABioAXJkACYIgCYOoCYKYBYFABYHICYHYCgFgEwMAOTRAUwJwDl4TCGAqA+AiASAcAUAYAD/w+goALAJgKgHgGAK//////////9a1rWta1rWvOc5znOc5znP//////////////8YxjGMYxjGMYxjGMYxjGMYxrGsa//tCxA4AClVbY+wkbwlNq2v9h43xjGMYxjGMYxjnOc5znOc5znOc5zXOc5znOc5znMa5rWtYxrWtd7Wtd7Wtd7WtYxrWtYxjGMYsYxYxYxYxYAAAAAAAQAAAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tCxBUAClVbYewkbwkiquw9lI2BVVVVVVVVVVVVVVVMQQRAMCRAMBEAMDAQADASAAAAgGAgAGBgIgBgYCQAYGAlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQZgAowgWOMJG/RSjAsAYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQfAAo0gV2MJGspQZBrMYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==";
+
+// Tab key sound (slightly different)
+const TAB_SOUND_BASE64 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAeHh4eHh4eHh4eHh4eHiNjY2NjY2NjY2NjY2Njaqqqqqqqqqqqqqqqqqqx8fHx8fHx8fHx8fHx8f///////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAYAAAAAAAAAAbAwjDrEAAAAAAD/+0DEAAAGBKNz9BEAJPhUrn80IAC5FGksBAIBABAKIiO5+c53tPBwMBgMBglCUJQlCQAAJQlCUJc+c/////Lnc/////+c9znPBAMBAIAwAJcUi8MpO0kwS8pc7N9szG0ITuLS4jdYgPEqRCYbLEYhKVKUo6aoYm6YJxGPQqKCdpimEw0p5HRU1NVVUEfBN0wgm6CfoqUE3qKio+jkE3KVOi1FKnKnKmqdRVOqyFRFSioqmqbYiD2KyaUkqFRZqiV/9bL/+0LEBgAIEVtp56RviQWrbD2HjfHlP1TWpUqVLU//1f/USSokDEpMjkqlTTyGRyHJJJFSipRJJ7ERLh0BAMBAMDAAMDAQDAxFNQACAYGJgADAwMQAwbOsCgBgIgBm1MASAGCSAGAaAGAKgBwEoBgYCdZ0aOXIUVf////z3957rymta1rWOuc9rWOt7QYCABn//1xAADAwEAwMBIAMDAQAwMBEAMDASADA59EAJ//6qABiqbXf/Sas1jGv+1rWtZKZxjrnGMYxrGsa5/zn/9a5z2ta7/rWta12ta//+0LEC4AKBV9l7CRvQXGrbD2HlehhADASADAwEAACAYACAAYCABgCABOe4lQADFDr3/1VVVVXet///5znOc5zv//////////////wiABioAXJkACYIgCYOoCYKYBYFABYHICYHYCgFgEwMAOTRAUwJwDl4TCGAqA+AiASAcAUAYAD/w+goALAJgKgHgGAK//////////9a1rWta1rWvOc5znOc5znP//////////////8YxjGMYxjGMYxjGMYxjGMYxrGsa//tCxA4AClVbY+wkbwlNq2v9h43xjGMYxjGMYxjnOc5znOc5znOc5zXOc5znOc5znMa5rWtYxrWtd7Wtd7Wtd7WtYxrWtYxjGMYsYxYxYxYxYAAAAAAAQAAAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tCxBUAClVbYewkbwkiquw9lI2BVVVVVVVVVVVVVVVMQQRAMCRAMBEAMDAQADASAAAAgGAgAGBgIgBgYCQAYGAlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQZgAowgWOMJG/RSjAsAYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQfAAo0gV2MJGspQZBrMYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==";
+
+// Audio context for better sound handling
+let audioContext: AudioContext | null = null;
+
+// Initialize audio context on first user interaction
+const initAudioContext = () => {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+  return audioContext;
+};
+
 // Create a function that returns a new Audio object each time to avoid issues with multiple plays
-const createKeySound = () => {
-  const sound = new Audio(TYPING_SOUND_BASE64);
-  sound.volume = 0.5;
+const createKeySound = (keyType: 'normal' | 'backspace' | 'tab' = 'normal') => {
+  // Try to initialize audio context if not already done
+  try {
+    initAudioContext();
+  } catch (e) {
+    console.log('Audio context initialization failed, falling back to Audio API');
+  }
+  
+  // Select the appropriate sound based on key type
+  let soundBase64 = TYPING_SOUND_BASE64;
+  if (keyType === 'backspace') {
+    soundBase64 = BACKSPACE_SOUND_BASE64;
+  } else if (keyType === 'tab') {
+    soundBase64 = TAB_SOUND_BASE64;
+  }
+  
+  const sound = new Audio(soundBase64);
+  sound.volume = 0.4; // Slightly lower volume
   return sound;
 };
 
@@ -64,6 +96,36 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     startTime: null,
     timeRemaining: duration,
   });
+  
+  // Initialize audio on component mount to handle browser autoplay policies
+  useEffect(() => {
+    // Try to initialize audio context
+    try {
+      // Create a silent sound and play it on first user interaction
+      const initSound = () => {
+        initAudioContext();
+        const sound = createKeySound();
+        sound.volume = 0;
+        sound.play().catch(e => console.log("Initial sound play failed, will retry on user interaction"));
+        
+        // Remove event listeners after first interaction
+        document.removeEventListener('click', initSound);
+        document.removeEventListener('keydown', initSound);
+      };
+      
+      // Add event listeners for first user interaction
+      document.addEventListener('click', initSound);
+      document.addEventListener('keydown', initSound);
+      
+      return () => {
+        // Clean up event listeners
+        document.removeEventListener('click', initSound);
+        document.removeEventListener('keydown', initSound);
+      };
+    } catch (e) {
+      console.log("Audio initialization failed:", e);
+    }
+  }, []);
   
   const [typingStats, setTypingStats] = useState<TypingStats>({
     wpm: 0,
@@ -475,10 +537,19 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
     if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Tab') {
       e.preventDefault(); // Prevent default browser behavior
       
-      // Play sound if enabled
-      if (settings.soundEnabled && e.key.length === 1) {
+      // Play sound if enabled - for ALL keys including Backspace and Tab
+      if (settings.soundEnabled) {
+        // Create a new sound instance with the appropriate sound type
+        let keyType: 'normal' | 'backspace' | 'tab' = 'normal';
+        
+        if (e.key === 'Backspace') {
+          keyType = 'backspace';
+        } else if (e.key === 'Tab') {
+          keyType = 'tab';
+        }
+        
         // Create a new sound instance each time to avoid overlapping play issues
-        const sound = createKeySound();
+        const sound = createKeySound(keyType);
         sound.play().catch(err => {
           // Silently fail without console error to avoid filling up the console
           // console.error("Could not play sound:", err);
@@ -516,11 +587,7 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
           return;
         }
         
-        // Play typing sound if enabled
-        if (settings.soundEnabled) {
-          const keySound = createKeySound();
-          keySound.play().catch(err => console.error("Could not play sound:", err));
-        }
+        // Sound is already played above for all key presses
         
         setTypingState(prev => {
           const newState = { ...prev, currentPosition: prev.currentPosition + 1 };
@@ -542,11 +609,7 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       } else if (e.key === 'Backspace') {
         // Handle backspace to delete the previous character
         
-        // Play typing sound if enabled (also for backspace)
-        if (settings.soundEnabled) {
-          const keySound = createKeySound();
-          keySound.play().catch(err => console.error("Could not play sound:", err));
-        }
+        // Sound is already played above for all key presses
         
         setTypingState(prev => {
           if (prev.currentPosition > 0) {
