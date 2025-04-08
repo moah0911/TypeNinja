@@ -35,8 +35,12 @@ interface TextCache {
 const TYPING_SOUND_BASE64 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAeHh4eHh4eHh4eHh4eHiNjY2NjY2NjY2NjY2Njaqqqqqqqqqqqqqqqqqqx8fHx8fHx8fHx8fHx8f///////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAYAAAAAAAAAAbAwjDrEAAAAAAD/+0DEAAAGBKNz9BEAJPhUrn80IAC5FGksBAIBABAKIiO5+c53tPBwMBgMBglCUJQlCQAAJQlCUJc+c/////Lnc/////+c9znPBAMBAIAwAJcUi8MpO0kwS8pc7N9szG0ITuLS4jdYgPEqRCYbLEYhKVKUo6aoYm6YJxGPQqKCdpimEw0p5HRU1NVVUEfBN0wgm6CfoqUE3qKio+jkE3KVOi1FKnKnKmqdRVOqyFRFSioqmqbYiD2KyaUkqFRZqiV/9bL/+0LEBgAIEVtp56RviQWrbD2HjfHlP1TWpUqVLU//1f/USSokDEpMjkqlTTyGRyHJJJFSipRJJ7ERLh0BAMBAMDAAMDAQDAxFNQACAYGJgADAwMQAwbOsCgBgIgBm1MASAGCSAGAaAGAKgBwEoBgYCdZ0aOXIUVf////z3957rymta1rWOuc9rWOt7QYCABn//1xAADAwEAwMBIAMDAQAwMBEAMDASADA59EAJ//6qABiqbXf/Sas1jGv+1rWtZKZxjrnGMYxrGsa5/zn/9a5z2ta7/rWta12ta//+0LEC4AKBV9l7CRvQXGrbD2HlehhADASADAwEAACAYACAAYCABgCABOe4lQADFDr3/1VVVVXet///5znOc5zv//////////////wiABioAXJkACYIgCYOoCYKYBYFABYHICYHYCgFgEwMAOTRAUwJwDl4TCGAqA+AiASAcAUAYAD/w+goALAJgKgHgGAK//////////9a1rWta1rWvOc5znOc5znP//////////////8YxjGMYxjGMYxjGMYxjGMYxrGsa//tCxA4AClVbY+wkbwlNq2v9h43xjGMYxjGMYxjnOc5znOc5znOc5zXOc5znOc5znMa5rWtYxrWtd7Wtd7Wtd7WtYxrWtYxjGMYsYxYxYxYxYAAAAAAAQAAAAAACqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tCxBUAClVbYewkbwkiquw9lI2BVVVVVVVVVVVVVVVMQQRAMCRAMBEAMDAQADASAAAAgGAgAGBgIgBgYCQAYGAlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQZgAowgWOMJG/RSjAsAYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7QsQfAAo0gV2MJGspQZBrMYSNaVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==";
 
 // Audio setup
-const keySound = new Audio(TYPING_SOUND_BASE64);
-keySound.volume = 0.5;
+// Create a function that returns a new Audio object each time to avoid issues with multiple plays
+const createKeySound = () => {
+  const sound = new Audio(TYPING_SOUND_BASE64);
+  sound.volume = 0.5;
+  return sound;
+};
 
 // Global text cache (shared between instances)
 const textCache: TextCache = {};
@@ -477,8 +481,12 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       
       // Play sound if enabled
       if (settings.soundEnabled && e.key.length === 1) {
-        keySound.currentTime = 0;
-        keySound.play().catch(err => console.error("Could not play sound:", err));
+        // Create a new sound instance each time to avoid overlapping play issues
+        const sound = createKeySound();
+        sound.play().catch(err => {
+          // Silently fail without console error to avoid filling up the console
+          // console.error("Could not play sound:", err);
+        });
       }
       
       if (e.key === 'Tab') {
@@ -523,8 +531,8 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
           
           // End test if we've reached the end of the text
           if (newState.currentPosition >= typingState.text.length) {
-            // Use setTimeout to ensure state is updated before calling endTest
-            setTimeout(() => endTest(), 10);
+            // Use setTimeout with longer delay to ensure state is fully updated
+            setTimeout(() => endTest(), 100);
           }
           
           return newState;
