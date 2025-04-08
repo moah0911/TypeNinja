@@ -67,18 +67,19 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
   useEffect(() => {
     if (!typingState.text) {
       // If the API fails, use local text generator as fallback
-      getRandomText(typingState.mode).then(text => {
+      getRandomText(typingState.mode, duration).then(text => {
         setTypingState(prev => ({ ...prev, text }));
       });
       
       // Try to fetch from API
       refetch().then(result => {
-        if (result.data && result.data.length > 0) {
-          setTypingState(prev => ({ ...prev, text: result.data[0] }));
+        const data = result.data as string[] | undefined;
+        if (data && data.length > 0) {
+          setTypingState(prev => ({ ...prev, text: data[0] }));
         }
       });
     }
-  }, [typingState.mode, typingState.text, refetch]);
+  }, [typingState.mode, typingState.text, refetch, duration]);
   
   // Timer effect
   useEffect(() => {
@@ -189,23 +190,24 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       timeRemaining: duration,
     }));
     
-    // Get new text for the same mode
-    getRandomText(typingState.mode).then(text => {
+    // Get new text for the same mode with proper duration
+    getRandomText(typingState.mode, duration).then(text => {
       setTypingState(prev => ({ ...prev, text }));
     });
     
     // Try to fetch from API
     refetch().then(result => {
-      if (result.data && result.data.length > 0) {
-        setTypingState(prev => ({ ...prev, text: result.data[0] }));
+      const data = result.data as string[] | undefined;
+      if (data && data.length > 0) {
+        setTypingState(prev => ({ ...prev, text: data[0] }));
       }
     });
   }, [duration, typingState.mode, refetch]);
   
   // Handle keyboard input
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
-    // Tab + Enter to restart
-    if (e.key === 'Enter' && e.getModifierState('Tab')) {
+    // Check for Ctrl+Enter or Alt+Enter to restart (more reliable than Tab+Enter)
+    if (e.key === 'Enter' && (e.ctrlKey || e.altKey)) {
       resetTest();
       return;
     }
@@ -215,8 +217,8 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       startTest();
     }
     
-    // Only process alphanumeric keys, punctuation, spaces
-    if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Tab') {
+    // Only process alphanumeric keys, punctuation, spaces, backspace
+    if (e.key.length === 1 || e.key === 'Backspace') {
       // Play sound if enabled
       if (settings.soundEnabled && e.key.length === 1) {
         keySound.currentTime = 0;
@@ -226,6 +228,12 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
       if (e.key.length === 1) {
         // Regular character input
         const expectedChar = typingState.text[typingState.currentPosition];
+        
+        // If we're at the end of the text, don't process more input
+        if (typingState.currentPosition >= typingState.text.length) {
+          endTest();
+          return;
+        }
         
         setTypingState(prev => {
           const newState = { ...prev, currentPosition: prev.currentPosition + 1 };
@@ -238,7 +246,8 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
           
           // End test if we've reached the end of the text
           if (newState.currentPosition >= typingState.text.length) {
-            endTest();
+            // Use setTimeout to ensure state is updated before calling endTest
+            setTimeout(() => endTest(), 10);
           }
           
           return newState;

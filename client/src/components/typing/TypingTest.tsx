@@ -67,7 +67,7 @@ export default function TypingTest({ onTestComplete, onModePreviewRequest }: Typ
         />
         
         <div className="text-center text-secondary text-sm mt-4">
-          press <span className="text-accent font-mono px-1">tab</span> + <span className="text-accent font-mono px-1">enter</span> to restart test
+          press <span className="text-accent font-mono px-1">ctrl</span> + <span className="text-accent font-mono px-1">enter</span> or <span className="text-accent font-mono px-1">alt</span> + <span className="text-accent font-mono px-1">enter</span> to restart test
         </div>
       </div>
     </>

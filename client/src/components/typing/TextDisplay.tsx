@@ -80,6 +80,9 @@ export default function TextDisplay({
       {!isActive && (
         <div className="mt-4 text-center text-secondary text-sm">
           Click here or press any key to focus and start typing
+          <span className="block mt-1 text-xs">
+            Use <span className="text-accent font-mono">Ctrl+Enter</span> or <span className="text-accent font-mono">Alt+Enter</span> to restart
+          </span>
         </div>
       )}
     </div>
