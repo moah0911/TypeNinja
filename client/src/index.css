@@ -58,8 +58,9 @@
     50% { @apply opacity-0; }
   }
   
+  /* Character styling for typing test */
   .char {
-    @apply inline-block relative;
+    @apply inline-block relative transition-all duration-75;
   }
   
   .char.correct {
@@ -67,32 +68,51 @@
   }
   
   .char.incorrect {
-    @apply text-destructive underline;
+    @apply text-destructive border-b border-destructive;
   }
   
   .char.current {
-    @apply text-accent;
+    @apply text-accent relative;
   }
   
+  .char.current::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-full h-0.5 bg-accent animate-blink;
+  }
+  
+  /* Add a nice transition during typing */
+  .typing-animation .char {
+    @apply transform transition-transform;
+  }
+  
+  .typing-animation .char.current {
+    @apply scale-110;
+  }
+  
+  /* Mode indicator styling */
   .mode-indicator {
-    @apply relative cursor-pointer;
+    @apply relative cursor-pointer transition-all duration-200;
   }
   
   .mode-indicator::before {
     content: '';
-    @apply absolute -bottom-1 left-0 h-0.5 w-full rounded;
+    @apply absolute -bottom-1 left-0 h-0.5 w-0 rounded transition-all duration-300;
+  }
+  
+  .mode-indicator:hover::before {
+    @apply w-full opacity-50;
   }
   
   .mode-indicator.active::before {
-    @apply bg-accent;
+    @apply bg-accent w-full opacity-100;
   }
   
   .mode-indicator.flirty-active::before {
-    @apply bg-[#FF6B8B];
+    @apply bg-[#FF6B8B] w-full opacity-100;
   }
   
   .mode-indicator.dev-active::before {
-    @apply bg-[#56C9CC];
+    @apply bg-[#56C9CC] w-full opacity-100;
   }
 }
 

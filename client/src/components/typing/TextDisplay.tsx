@@ -1,5 +1,5 @@
 import { KeyboardEvent, useRef, useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, MousePointer, Keyboard } from "lucide-react";
 
 interface TextDisplayProps {
   text: string;
@@ -59,8 +59,9 @@ export default function TextDisplay({
   
   if (loading) {
     return (
-      <div className="relative font-mono text-lg leading-relaxed text-secondary bg-background p-5 rounded-lg mb-4 flex justify-center items-center min-h-[180px]">
-        <Loader2 className="h-8 w-8 text-accent animate-spin" />
+      <div className="relative font-mono text-lg leading-relaxed text-secondary bg-background p-5 rounded-lg mb-4 flex flex-col justify-center items-center min-h-[180px]">
+        <Loader2 className="h-8 w-8 text-accent animate-spin mb-2" />
+        <span className="text-sm text-secondary animate-pulse">Loading text...</span>
       </div>
     );
   }
@@ -68,7 +69,7 @@ export default function TextDisplay({
   return (
     <div 
       ref={typingAreaRef}
-      className="relative font-mono text-lg leading-relaxed text-secondary overflow-hidden bg-background p-5 rounded-lg mb-4 select-none outline-none"
+      className="relative font-mono text-lg leading-relaxed text-secondary overflow-hidden bg-background p-5 rounded-lg mb-4 select-none outline-none border border-accent/10 shadow-lg transition-all duration-300 hover:border-accent/20"
       tabIndex={0}
       onClick={onClick}
       onKeyDown={onKeyDown}
@@ -78,11 +79,18 @@ export default function TextDisplay({
       </div>
       
       {!isActive && (
-        <div className="mt-4 text-center text-secondary text-sm">
-          Click here or press any key to focus and start typing
-          <span className="block mt-1 text-xs">
-            Use <span className="text-accent font-mono">Ctrl+Enter</span> or <span className="text-accent font-mono">Alt+Enter</span> to restart
-          </span>
+        <div className="mt-6 text-center flex flex-col items-center justify-center space-y-3">
+          <div className="flex items-center gap-2 bg-accent/5 px-4 py-2 rounded-full">
+            <MousePointer className="h-4 w-4 text-accent animate-bounce" />
+            <span className="text-secondary text-sm">Click here or press any key to start typing</span>
+          </div>
+          
+          <div className="flex items-center gap-2 bg-black/10 px-4 py-2 rounded-full">
+            <Keyboard className="h-4 w-4 text-secondary" />
+            <span className="text-xs text-secondary">
+              Use <span className="text-accent font-mono bg-black/20 px-1.5 py-0.5 rounded">Ctrl+Enter</span> or <span className="text-accent font-mono bg-black/20 px-1.5 py-0.5 rounded">Alt+Enter</span> to restart
+            </span>
+          </div>
         </div>
       )}
     </div>
