@@ -30,10 +30,20 @@ npm run dev
    - Name: typeninja (or your preferred name)
    - Environment: Node
    - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
+   - Start Command: `node dist/index.js || node server.js`
+   - Environment Variables: Add `NODE_ENV=production`
 6. Click "Create Web Service"
 
 Render will automatically deploy your application and provide you with a URL.
+
+### Troubleshooting Render Deployment
+
+If you encounter issues with the deployment:
+
+1. Check the build logs in the Render dashboard
+2. Make sure the build process is creating the `dist/index.js` file
+3. Try manually setting the Node.js version to 18.x in the Environment settings
+4. If all else fails, the application will fall back to using the simple `server.js` file
 
 ### Render Deployment Notes
 
