@@ -26,10 +26,17 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0c121d] via-background to-background z-0"></div>
+      <div className="absolute top-0 left-0 right-0 h-[400px] bg-gradient-to-b from-sky-900/20 to-transparent opacity-40 z-0"></div>
+      <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-sky-500/10 filter blur-3xl"></div>
+      <div className="absolute top-1/4 -right-24 w-96 h-96 rounded-full bg-indigo-500/10 filter blur-3xl"></div>
+      <div className="absolute -bottom-24 left-1/3 w-96 h-96 rounded-full bg-cyan-500/10 filter blur-3xl"></div>
+      
       <Header />
       
-      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
+      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10">
         <TypingTest 
           onTestComplete={handleTestComplete} 
           onModePreviewRequest={handleOpenModePreview}

@@ -53,57 +53,95 @@ export default function ModeSelector({
   return (
     <div className="w-full max-w-3xl mb-8">
       {/* Mode Selector */}
-      <div className="flex space-x-8 justify-center mb-4">
+      <div className="flex justify-center space-x-8 mb-5">
         <div 
-          className={`relative cursor-pointer mode-indicator ${selectedMode === 'normal' ? 'active' : ''}`}
+          className={`relative cursor-pointer mode-indicator group`}
           onClick={() => onModeChange('normal')}
         >
-          <span className={`font-mono ${selectedMode === 'normal' ? 'text-accent' : 'text-secondary hover:text-accent transition-colors'}`}>
-            Normal
-          </span>
+          <div className={`flex flex-col items-center px-6 py-2 rounded-lg transition-all duration-300
+            ${selectedMode === 'normal' 
+              ? 'bg-gradient-to-r from-sky-500/20 to-indigo-500/20 shadow-lg border border-sky-500/20' 
+              : 'hover:bg-black/10 border border-transparent'}`}>
+            <span className={`font-medium text-base
+              ${selectedMode === 'normal' 
+                ? 'text-sky-400' 
+                : 'text-secondary group-hover:text-sky-400 transition-colors'}`}>
+              Normal
+            </span>
+            {selectedMode === 'normal' && (
+              <div className="w-10 h-0.5 bg-gradient-to-r from-sky-400 to-indigo-400 rounded-full mt-1.5"></div>
+            )}
+          </div>
         </div>
         
         <div 
-          className={`relative cursor-pointer mode-indicator ${selectedMode === 'flirty' ? 'active flirty-active' : ''}`}
+          className={`relative cursor-pointer mode-indicator group`}
           onClick={() => onModeChange('flirty')}
         >
-          <span className={`font-mono ${selectedMode === 'flirty' ? 'text-[#FF6B8B]' : 'text-secondary hover:text-[#FF6B8B] transition-colors'}`}>
-            Flirty
-          </span>
+          <div className={`flex flex-col items-center px-6 py-2 rounded-lg transition-all duration-300
+            ${selectedMode === 'flirty' 
+              ? 'bg-gradient-to-r from-pink-500/20 to-red-500/20 shadow-lg border border-pink-500/20' 
+              : 'hover:bg-black/10 border border-transparent'}`}>
+            <span className={`font-medium text-base
+              ${selectedMode === 'flirty' 
+                ? 'text-pink-400' 
+                : 'text-secondary group-hover:text-pink-400 transition-colors'}`}>
+              Flirty
+            </span>
+            {selectedMode === 'flirty' && (
+              <div className="w-10 h-0.5 bg-gradient-to-r from-pink-400 to-red-400 rounded-full mt-1.5"></div>
+            )}
+          </div>
         </div>
         
         <div 
-          className={`relative cursor-pointer mode-indicator 
-            ${selectedMode === 'developer' || 
-              selectedMode === 'python' || 
-              selectedMode === 'java' || 
-              selectedMode === 'csharp' || 
-              selectedMode === 'go' ? 'active dev-active' : ''}`}
+          className={`relative cursor-pointer mode-indicator group`}
           onClick={() => onModeChange(selectedLanguage || 'developer')}
         >
-          <span className={`font-mono 
+          <div className={`flex flex-col items-center px-6 py-2 rounded-lg transition-all duration-300
             ${selectedMode === 'developer' || 
               selectedMode === 'python' || 
               selectedMode === 'java' || 
               selectedMode === 'csharp' || 
-              selectedMode === 'go' ? 'text-[#56C9CC]' : 'text-secondary hover:text-[#56C9CC] transition-colors'}`}>
-            Developer
-          </span>
+              selectedMode === 'go'
+              ? 'bg-gradient-to-r from-cyan-500/20 to-teal-500/20 shadow-lg border border-teal-500/20' 
+              : 'hover:bg-black/10 border border-transparent'}`}>
+            <span className={`font-medium text-base
+              ${selectedMode === 'developer' || 
+                selectedMode === 'python' || 
+                selectedMode === 'java' || 
+                selectedMode === 'csharp' || 
+                selectedMode === 'go' 
+                ? 'text-teal-400' 
+                : 'text-secondary group-hover:text-teal-400 transition-colors'}`}>
+              Developer
+            </span>
+            {(selectedMode === 'developer' || 
+              selectedMode === 'python' || 
+              selectedMode === 'java' || 
+              selectedMode === 'csharp' || 
+              selectedMode === 'go') && (
+              <div className="w-10 h-0.5 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full mt-1.5"></div>
+            )}
+          </div>
         </div>
       </div>
       
       {/* Language Selector (only visible when Developer mode is selected) */}
       {showLanguages && (
-        <div className="flex justify-center space-x-4 mt-2 mb-4">
+        <div className="flex justify-center space-x-3 mt-1 mb-5">
           {languages.map(language => (
             <button
               key={language.id}
-              className={`py-1 px-3 rounded bg-background-secondary
-                ${selectedLanguage === language.id ? 'border-2' : 'border border-transparent'} 
-                transition-colors text-sm font-mono`}
+              className={`py-2 px-4 rounded-lg transition-all duration-200
+                ${selectedLanguage === language.id 
+                  ? 'shadow-md' 
+                  : 'hover:bg-black/10 bg-black/5'} 
+                text-sm font-medium`}
               style={{ 
                 color: selectedLanguage === language.id ? language.color : 'var(--color-text-secondary)',
-                borderColor: selectedLanguage === language.id ? language.color : 'transparent'
+                backgroundColor: selectedLanguage === language.id ? `${language.color}15` : '', // 15 is hex for 10% opacity
+                borderLeft: selectedLanguage === language.id ? `3px solid ${language.color}` : ''
               }}
               onClick={() => handleLanguageChange(language.id)}
             >
@@ -114,18 +152,21 @@ export default function ModeSelector({
       )}
       
       {/* Duration Selector */}
-      <div className="flex justify-center space-x-4 mt-2">
-        {durations.map(duration => (
-          <button
-            key={duration}
-            className={`py-1 px-3 rounded bg-background-secondary 
-              ${selectedDuration === duration ? 'text-accent' : 'text-secondary hover:text-accent'} 
-              transition-colors text-sm font-mono`}
-            onClick={() => onDurationChange(duration)}
-          >
-            {duration}s
-          </button>
-        ))}
+      <div className="flex justify-center space-x-3 mt-2">
+        <div className="bg-black/10 p-1 rounded-lg inline-flex shadow-inner">
+          {durations.map(duration => (
+            <button
+              key={duration}
+              className={`py-1.5 px-4 rounded-md text-sm font-medium transition-all duration-200
+                ${selectedDuration === duration 
+                  ? 'bg-gradient-to-r from-sky-500/30 to-indigo-500/30 text-white shadow-sm' 
+                  : 'text-secondary hover:text-sky-200'}`}
+              onClick={() => onDurationChange(duration)}
+            >
+              {duration}s
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

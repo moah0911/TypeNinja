@@ -32,33 +32,37 @@ export default function TestInfo({ wpm, accuracy, timeRemaining, onReset }: Test
     <div className="w-full max-w-4xl mb-8">
       <div className="flex justify-between items-center">
         {/* Test Statistics */}
-        <div className="flex items-center space-x-6 bg-black/20 rounded-2xl p-3 backdrop-blur-sm">
-          <div className="flex items-center gap-2 border-r border-accent/10 pr-6">
-            <div className="bg-accent/10 p-2 rounded-lg">
-              <Zap className="h-5 w-5 text-accent" />
+        <div className="flex items-center space-x-6 bg-gradient-to-r from-black/20 to-black/10 rounded-2xl p-3 backdrop-blur-sm border border-white/5 shadow-lg">
+          <div className="flex items-center gap-3 border-r border-sky-500/10 pr-6">
+            <div className="bg-gradient-to-br from-sky-500/20 to-indigo-500/10 p-2.5 rounded-xl border border-sky-500/20 shadow-md">
+              <Zap className="h-5 w-5 text-sky-400" />
             </div>
             <div>
-              <p className="text-accent text-3xl font-bold leading-none">{wpm}</p>
+              <p className="text-sky-400 text-3xl font-bold leading-none">{wpm}</p>
               <p className="text-secondary text-xs uppercase tracking-wider font-medium">WPM</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 border-r border-accent/10 pr-6">
-            <div className="bg-green-500/10 p-2 rounded-lg">
-              <BarChart className="h-5 w-5 text-green-500" />
+          <div className="flex items-center gap-3 border-r border-sky-500/10 pr-6">
+            <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/10 p-2.5 rounded-xl border border-green-500/20 shadow-md">
+              <BarChart className="h-5 w-5 text-green-400" />
             </div>
             <div>
-              <p className="text-green-500 text-3xl font-bold leading-none">{accuracy}%</p>
+              <p className="text-green-400 text-3xl font-bold leading-none">{accuracy}%</p>
               <p className="text-secondary text-xs uppercase tracking-wider font-medium">accuracy</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <div className={`${timeRemaining <= 10 && isFlashing ? 'bg-red-500/20' : 'bg-blue-500/10'} p-2 rounded-lg transition-colors`}>
-              <Clock className={`h-5 w-5 ${timeRemaining <= 10 && isFlashing ? 'text-red-500' : 'text-blue-500'} transition-colors`} />
+          <div className="flex items-center gap-3">
+            <div className={`
+              ${timeRemaining <= 10 && isFlashing ? 
+                'bg-gradient-to-br from-red-500/30 to-red-500/10 border-red-500/30' : 
+                'bg-gradient-to-br from-blue-500/20 to-blue-500/5 border-blue-500/20'} 
+              p-2.5 rounded-xl border shadow-md transition-all duration-300`}>
+              <Clock className={`h-5 w-5 ${timeRemaining <= 10 && isFlashing ? 'text-red-400' : 'text-blue-400'} transition-colors`} />
             </div>
             <div>
-              <p className={`${timeRemaining <= 10 && isFlashing ? 'text-red-500' : 'text-blue-500'} text-3xl font-bold leading-none transition-colors`}>
+              <p className={`${timeRemaining <= 10 && isFlashing ? 'text-red-400' : 'text-blue-400'} text-3xl font-bold leading-none transition-colors`}>
                 {timeRemaining}s
               </p>
               <p className="text-secondary text-xs uppercase tracking-wider font-medium">time left</p>
@@ -73,8 +77,9 @@ export default function TestInfo({ wpm, accuracy, timeRemaining, onReset }: Test
               <Button 
                 variant="outline"
                 size="icon"
-                className="bg-black/20 border-accent/10 hover:bg-accent/10 hover:text-accent transition-all"
+                className="bg-gradient-to-r from-sky-500/10 to-indigo-500/10 border border-sky-500/20 hover:bg-sky-500/20 hover:text-sky-400 transition-all shadow-lg"
                 onClick={onReset}
+                style={{boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(56, 189, 248, 0.1)"}}
               >
                 <RefreshCcw className="h-5 w-5" />
               </Button>

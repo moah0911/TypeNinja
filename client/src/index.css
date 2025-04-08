@@ -50,7 +50,7 @@
   
   /* Typing test specific styles */
   .cursor-typing {
-    @apply inline-block w-0.5 h-5 bg-accent animate-blink mr-[-2px];
+    @apply inline-block w-1 h-5 bg-sky-400 animate-blink mr-[-2px] rounded-full shadow-glow;
   }
   
   @keyframes blink {
@@ -60,33 +60,43 @@
   
   /* Character styling for typing test */
   .char {
-    @apply inline-block relative transition-all duration-75;
+    @apply inline-block relative transition-all duration-100 px-[1px];
   }
   
   .char.correct {
-    @apply text-foreground;
+    @apply text-sky-100;
   }
   
   .char.incorrect {
-    @apply text-destructive border-b border-destructive;
+    @apply text-red-400 relative;
+  }
+  
+  .char.incorrect::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-full h-0.5 bg-red-500/70 rounded-full;
   }
   
   .char.current {
-    @apply text-accent relative;
+    @apply text-sky-400 relative;
   }
   
   .char.current::after {
     content: '';
-    @apply absolute left-0 bottom-0 w-full h-0.5 bg-accent animate-blink;
+    @apply absolute left-0 bottom-0 w-full h-1 bg-sky-400/70 rounded-full animate-blink shadow-glow;
   }
   
   /* Add a nice transition during typing */
   .typing-animation .char {
-    @apply transform transition-transform;
+    @apply transform transition-all;
   }
   
   .typing-animation .char.current {
-    @apply scale-110;
+    @apply scale-110 font-semibold;
+  }
+  
+  /* Shadow effect for glowing elements */
+  .shadow-glow {
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
   }
   
   /* Mode indicator styling */
