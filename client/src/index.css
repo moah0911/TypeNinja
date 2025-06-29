@@ -130,4 +130,8 @@
   .animate-blink {
     animation: blink 1s step-end infinite;
   }
+
+  .custom-focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary;
+  }
 }

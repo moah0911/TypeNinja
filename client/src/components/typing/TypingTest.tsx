@@ -60,13 +60,15 @@ const TypingTest = forwardRef<TypingTestRef, TypingTestProps>(({ onTestComplete,
     
     // Show developer mode preview for any programming language selection
     // if not already in a programming language mode
-    const isDeveloperMode = (mode === "developer" || 
+    const isDeveloperMode = (mode === "developer" ||
+                             mode === "typescript" ||
                              mode === "python" || 
                              mode === "java" || 
                              mode === "csharp" || 
                              mode === "go");
                              
-    const wasAlreadyInDeveloperMode = (typingState.mode === "developer" || 
+    const wasAlreadyInDeveloperMode = (typingState.mode === "developer" ||
+                                       typingState.mode === "typescript" ||
                                        typingState.mode === "python" || 
                                        typingState.mode === "java" || 
                                        typingState.mode === "csharp" || 
@@ -106,6 +108,7 @@ const TypingTest = forwardRef<TypingTestRef, TypingTestProps>(({ onTestComplete,
           loading={loadingText}
           onClick={handleTypingAreaClick}
           onKeyDown={handleKeyDown}
+          mode={typingState.mode}
         />
       </div>
     </>

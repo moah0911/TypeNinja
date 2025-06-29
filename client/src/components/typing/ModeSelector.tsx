@@ -20,6 +20,7 @@ export default function ModeSelector({
   // Define programming languages for developer mode
   const languages = [
     { id: 'developer', name: 'JavaScript', color: '#F7DF1E' },
+    { id: 'typescript', name: 'TypeScript', color: '#3178C6' },
     { id: 'python', name: 'Python', color: '#3776AB' },
     { id: 'java', name: 'Java', color: '#B07219' },
     { id: 'csharp', name: 'C#', color: '#178600' },
@@ -29,7 +30,7 @@ export default function ModeSelector({
   // Show languages dropdown when developer mode is selected
   useEffect(() => {
     if (selectedMode.startsWith('developer') || 
-        ['python', 'java', 'csharp', 'go'].includes(selectedMode)) {
+        ['typescript', 'python', 'java', 'csharp', 'go'].includes(selectedMode)) {
       setShowLanguages(true);
       
       // Find the matching language when mode changes
@@ -55,8 +56,10 @@ export default function ModeSelector({
       {/* Mode Selector */}
       <div className="flex justify-center space-x-8 mb-5">
         <div 
-          className={`relative cursor-pointer mode-indicator group`}
+          className={`relative cursor-pointer mode-indicator group custom-focus-ring rounded-lg`}
           onClick={() => onModeChange('normal')}
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onModeChange('normal'); }}
         >
           <div className={`flex flex-col items-center px-6 py-2 rounded-lg transition-all duration-300
             ${selectedMode === 'normal' 
@@ -75,8 +78,10 @@ export default function ModeSelector({
         </div>
         
         <div 
-          className={`relative cursor-pointer mode-indicator group`}
+          className={`relative cursor-pointer mode-indicator group custom-focus-ring rounded-lg`}
           onClick={() => onModeChange('flirty')}
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onModeChange('flirty'); }}
         >
           <div className={`flex flex-col items-center px-6 py-2 rounded-lg transition-all duration-300
             ${selectedMode === 'flirty' 
@@ -95,11 +100,14 @@ export default function ModeSelector({
         </div>
         
         <div 
-          className={`relative cursor-pointer mode-indicator group`}
+          className={`relative cursor-pointer mode-indicator group custom-focus-ring rounded-lg`}
           onClick={() => onModeChange(selectedLanguage || 'developer')}
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onModeChange(selectedLanguage || 'developer'); }}
         >
           <div className={`flex flex-col items-center px-6 py-2 rounded-lg transition-all duration-300
-            ${selectedMode === 'developer' || 
+            ${selectedMode === 'developer' ||
+              selectedMode === 'typescript' ||
               selectedMode === 'python' || 
               selectedMode === 'java' || 
               selectedMode === 'csharp' || 
@@ -107,7 +115,8 @@ export default function ModeSelector({
               ? 'bg-gradient-to-r from-cyan-500/20 to-teal-500/20 shadow-lg border border-teal-500/20' 
               : 'hover:bg-black/10 border border-transparent'}`}>
             <span className={`font-medium text-base
-              ${selectedMode === 'developer' || 
+              ${selectedMode === 'developer' ||
+                selectedMode === 'typescript' ||
                 selectedMode === 'python' || 
                 selectedMode === 'java' || 
                 selectedMode === 'csharp' || 
@@ -116,7 +125,8 @@ export default function ModeSelector({
                 : 'text-secondary group-hover:text-teal-400 transition-colors'}`}>
               Developer
             </span>
-            {(selectedMode === 'developer' || 
+            {(selectedMode === 'developer' ||
+              selectedMode === 'typescript' ||
               selectedMode === 'python' || 
               selectedMode === 'java' || 
               selectedMode === 'csharp' || 
@@ -133,7 +143,7 @@ export default function ModeSelector({
           {languages.map(language => (
             <button
               key={language.id}
-              className={`py-2 px-4 rounded-lg transition-all duration-200
+              className={`py-2 px-4 rounded-lg transition-all duration-200 custom-focus-ring
                 ${selectedLanguage === language.id 
                   ? 'shadow-md' 
                   : 'hover:bg-black/10 bg-black/5'} 
@@ -157,7 +167,7 @@ export default function ModeSelector({
           {durations.map(duration => (
             <button
               key={duration}
-              className={`py-1.5 px-4 rounded-md text-sm font-medium transition-all duration-200
+              className={`py-1.5 px-4 rounded-md text-sm font-medium transition-all duration-200 custom-focus-ring
                 ${selectedDuration === duration 
                   ? 'bg-gradient-to-r from-sky-500/30 to-indigo-500/30 text-white shadow-sm' 
                   : 'text-secondary hover:text-sky-200'}`}

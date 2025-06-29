@@ -81,7 +81,7 @@ const textCache: TextCache = {};
 const fetchLock = { isLocked: false };
 
 // List of all available modes for preloading
-const ALL_MODES = ["normal", "flirty", "developer", "python", "java", "csharp", "go"];
+const ALL_MODES = ["normal", "flirty", "developer", "typescript", "python", "java", "csharp", "go"];
 const ALL_DURATIONS = [15, 30, 60, 120];
 
 export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
@@ -289,169 +289,149 @@ export function useTypingTest({ duration, onComplete }: UseTypingTestProps) {
   
   // Define endTest first, before other useEffects that might call it
   const endTest = useCallback(() => {
-    // Clear timer interval if exists
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    
-    // Calculate final stats
+
     const correctCount = typingState.correctChars.length;
     const totalTyped = correctCount + typingState.incorrectChars.length;
-    
-    // Show results even if the user hasn't typed anything when time runs out
-    // (which would mean they get a 0 WPM result)
-    const timeExpired = typingState.timeRemaining <= 0;
-    const completedEarly = typingState.currentPosition >= typingState.text.length;
-    
-    // Always show results at least for time expiration, otherwise require typed characters
-    if (timeExpired || (totalTyped > 0 && completedEarly)) {
-      let finalWpm = typingStats.wpm;
-      let finalAccuracy = typingStats.accuracy;
-      
-      // If no typing occurred, set to zeros
-      if (totalTyped === 0) {
-        finalWpm = 0;
-        finalAccuracy = 0;
-      } else {
-        // Recalculate final stats to ensure accuracy
+
+    if (totalTyped > 0) {
+        let finalWpm = typingStats.wpm;
+        let finalAccuracy = typingStats.accuracy;
+
         if (typingState.startTime !== null) {
-          const elapsedMinutes = (Date.now() - typingState.startTime) / 60000;
-          if (elapsedMinutes > 0) {
-            const words = correctCount / 5;
-            finalWpm = Math.round(words / elapsedMinutes) || 0;
-            finalAccuracy = Math.round((correctCount / totalTyped) * 100) || 100;
-          }
+            const elapsedSeconds = (Date.now() - typingState.startTime) / 1000;
+            const elapsedMinutes = elapsedSeconds / 60;
+            if (elapsedMinutes > 0) {
+                const words = correctCount / 5;
+                finalWpm = Math.round(words / elapsedMinutes) || 0;
+                finalAccuracy = Math.round((correctCount / totalTyped) * 100) || 0;
+            }
         }
-      }
-      
-      // Create result object
-      const result: TypingTestResult = {
-        wpm: finalWpm,
-        accuracy: finalAccuracy > 0 ? finalAccuracy : 0,
-        duration: completedEarly ? duration - typingState.timeRemaining : duration, // Actual time used
-        mode: typingState.mode,
-        characters: totalTyped,
-        errors: typingState.incorrectChars.length,
-      };
-      
-      // Save the result to API
-      mutate(result);
-      
-      // Notify parent component to show results
-      onComplete(result);
+        finalAccuracy = finalAccuracy > 0 ? finalAccuracy : 0;
+        finalAccuracy = totalTyped === 0 ? 0 : Math.round((correctCount / totalTyped) * 100);
+        finalAccuracy = Math.max(0, finalAccuracy);
+
+
+        const result: TypingTestResult = {
+            wpm: finalWpm,
+            accuracy: finalAccuracy,
+            duration: Math.max(1, Math.round((Date.now() - (typingState.startTime || Date.now())) / 1000)),
+            mode: typingState.mode,
+            characters: totalTyped,
+            errors: typingState.incorrectChars.length,
+        };
+
+        mutate(result);
+        onComplete(result);
+    } else if (typingState.timeRemaining <=0 && totalTyped === 0) {
+        const result: TypingTestResult = {
+            wpm: 0,
+            accuracy: 0,
+            duration: duration,
+            mode: typingState.mode,
+            characters: 0,
+            errors: 0,
+        };
+        mutate(result);
+        onComplete(result);
     }
-    
-    // Reset test state but keep the mode
+
     setTypingState(prev => ({
       ...prev,
       isActive: false,
-      currentPosition: 0,
-      correctChars: [],
-      incorrectChars: [],
       startTime: null,
       timeRemaining: duration,
     }));
     
-    // We'll wait to load a new text until the user closes the results modal
-    // This prevents a new text from loading immediately after the test completes
   }, [typingStats, typingState, duration, onComplete, mutate]);
   
-  // Timer effect - going back to a simpler implementation
+  // Timer effect - consolidated logic
   useEffect(() => {
-    // Only run timer when test is active with a valid start time
-    if (typingState.isActive && typingState.startTime) {
-      // Clear any existing timer first to avoid duplicates
+    if (typingState.isActive && typingState.startTime && typingState.timeRemaining > 0) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current); // Clear previous interval if any
+      }
+      intervalRef.current = window.setInterval(() => {
+        setTypingState(prev => {
+          // Ensure we are still active and have time remaining
+          if (!prev.isActive || prev.timeRemaining <= 1) { // Check for <= 1 because we're about to decrement
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+            }
+
+            // Time has expired or test became inactive
+            const correctCount = prev.correctChars.length;
+            const totalTyped = correctCount + prev.incorrectChars.length;
+            let finalWpm = 0;
+            let finalAccuracy = 0;
+
+            if (totalTyped === 0) {
+              finalWpm = 0;
+              finalAccuracy = 0;
+            } else if (prev.startTime !== null) {
+              // Calculate elapsed time based on when the test actually started
+              const actualElapsedSeconds = (Date.now() - prev.startTime) / 1000;
+              // Duration for WPM should be the configured duration, or actual elapsed if shorter (e.g. early completion)
+              // For time expiry, it's the full duration.
+              const WPMCalculationDurationSeconds = duration;
+              const elapsedMinutes = WPMCalculationDurationSeconds / 60;
+
+              if (elapsedMinutes > 0) {
+                const words = correctCount / 5;
+                finalWpm = Math.round(words / elapsedMinutes) || 0;
+                finalAccuracy = Math.round((correctCount / totalTyped) * 100);
+              }
+            }
+
+            finalAccuracy = totalTyped === 0 ? 0 : Math.round((correctCount / totalTyped) * 100);
+            finalAccuracy = Math.max(0, finalAccuracy);
+
+
+            const result: TypingTestResult = {
+              wpm: finalWpm,
+              accuracy: finalAccuracy,
+              duration: duration,
+              mode: prev.mode,
+              characters: totalTyped,
+              errors: prev.incorrectChars.length,
+            };
+
+            mutate(result);
+            onComplete(result);
+
+            return {
+              ...prev,
+              isActive: false,
+              currentPosition: prev.currentPosition, // Keep position for results display
+              // correctChars: [], // Keep for results
+              // incorrectChars: [], // Keep for results
+              startTime: null,
+              timeRemaining: 0, // Explicitly set to 0
+            };
+          }
+          // Normal decrement
+          return { ...prev, timeRemaining: prev.timeRemaining - 1 };
+        });
+      }, 1000);
+    } else if (!typingState.isActive || typingState.timeRemaining <= 0) {
+      // Clear interval if test becomes inactive or time is already up
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      
-      // Set up a new timer interval
-      intervalRef.current = window.setInterval(() => {
-        setTypingState(prev => {
-          if (prev.timeRemaining <= 0) {
-            // Already at zero, don't keep decrementing
-            return prev;
-          }
-          
-          const newTimeRemaining = prev.timeRemaining - 1;
-          return { ...prev, timeRemaining: Math.max(0, newTimeRemaining) };
-        });
-      }, 1000);
     }
-    
-    // Cleanup function
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-  }, [typingState.isActive, typingState.startTime]);
-  
-  // Handle time expiration check without using endTest in a separate effect
-  useEffect(() => {
-    // We only care about the transition from 1 to 0 seconds while the test is active
-    if (typingState.isActive && typingState.timeRemaining === 0) {
-      // Use a local variable to prevent closure issues
-      const isActive = typingState.isActive;
-      const correctChars = [...typingState.correctChars];
-      const incorrectChars = [...typingState.incorrectChars];
-      const totalTyped = correctChars.length + incorrectChars.length;
-      const mode = typingState.mode;
-      
-      // Calculate stats for the result
-      let finalWpm = typingStats.wpm;
-      let finalAccuracy = typingStats.accuracy;
-      
-      // Handle edge case of no typing
-      if (totalTyped === 0) {
-        finalWpm = 0;
-        finalAccuracy = 0;
-      } else if (typingState.startTime !== null) {
-        // Double-check calculations
-        const elapsedMinutes = (Date.now() - typingState.startTime) / 60000;
-        if (elapsedMinutes > 0) {
-          const words = correctChars.length / 5;
-          finalWpm = Math.round(words / elapsedMinutes) || 0;
-          finalAccuracy = Math.round((correctChars.length / totalTyped) * 100) || 100;
-        }
-      }
-      
-      // Create result object
-      const result: TypingTestResult = {
-        wpm: finalWpm,
-        accuracy: finalAccuracy > 0 ? finalAccuracy : 0,
-        duration: duration, // Test completed due to time expiry
-        mode: mode,
-        characters: totalTyped,
-        errors: incorrectChars.length,
-      };
-      
-      // Save the result
-      mutate(result);
-      
-      // Send to parent
-      onComplete(result);
-      
-      // Reset test state
-      setTypingState(prev => ({
-        ...prev,
-        isActive: false,
-        currentPosition: 0,
-        correctChars: [],
-        incorrectChars: [],
-        startTime: null,
-        timeRemaining: duration,
-      }));
-      
-      // We'll wait to load a new text until the user closes the results modal
-      // This prevents a new text from loading immediately after the test completes
-    }
-  }, [typingState.timeRemaining, typingState.isActive, typingStats, typingState, duration, onComplete, mutate]);
-  
-
+  }, [typingState.isActive, typingState.startTime, duration, onComplete, mutate]); // Removed typingState.timeRemaining from deps to avoid re-triggering interval setup on each tick
   
   // Live stats calculation (optimized to update every 100ms instead of on every keystroke)
   useEffect(() => {
