@@ -10,6 +10,7 @@ interface TextDisplayProps {
   loading: boolean;
   onClick: () => void;
   onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
+  mode: string;
 }
 
 export default function TextDisplay({
@@ -20,10 +21,11 @@ export default function TextDisplay({
   isActive,
   loading,
   onClick,
-  onKeyDown
+  onKeyDown,
+  mode
 }: TextDisplayProps) {
   const typingAreaRef = useRef<HTMLDivElement>(null);
-  
+  const isFlirtyMode = mode === 'flirty';
   // Focus the typing area when it changes
   useEffect(() => {
     if (typingAreaRef.current) {
@@ -90,13 +92,15 @@ export default function TextDisplay({
   return (
     <div 
       ref={typingAreaRef}
-      className="relative font-mono text-lg leading-relaxed text-secondary overflow-hidden bg-gradient-to-b from-background/90 to-background p-6 rounded-xl mb-4 select-none outline-none border border-accent/15 shadow-xl transition-all duration-300 hover:border-accent/30 backdrop-blur-sm"
+      className={`relative font-mono text-lg leading-relaxed text-secondary overflow-hidden bg-gradient-to-b from-background/90 to-background p-6 rounded-xl mb-4 select-none outline-none border shadow-xl transition-all duration-300 backdrop-blur-sm
+      ${isFlirtyMode ? 'border-pink-500/40 hover:border-pink-500/60' : 'border-accent/15 hover:border-accent/30'}`}
       tabIndex={0}
       onClick={onClick}
       onKeyDown={onKeyDown}
-      style={{boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 120, 255, 0.05)"}}
+      style={{boxShadow: `0 10px 30px -15px rgba(0, 0, 0, 0.5), 0 0 20px ${isFlirtyMode ? 'rgba(236, 72, 153, 0.1)' : 'rgba(0, 120, 255, 0.05)'}`}}
     >
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500/30 to-indigo-500/30 rounded-t-xl"></div>
+      <div className={`absolute top-0 left-0 w-full h-1 rounded-t-xl
+        ${isFlirtyMode ? 'bg-gradient-to-r from-pink-500/40 to-red-500/40' : 'bg-gradient-to-r from-sky-500/30 to-indigo-500/30'}`}></div>
       <div className="typing-animation whitespace-pre-wrap tracking-wide">
         {renderChars()}
       </div>

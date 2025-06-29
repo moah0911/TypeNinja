@@ -10,7 +10,18 @@ const textCollections = {
     "Crazy Fredrick bought many very exquisite opal jewels.",
     "The five boxing wizards jump quickly.",
     "Jinxed wizards pluck ivy from the big quilt.",
-    "Waltz, bad nymph, for quick jigs vex."
+    "Waltz, bad nymph, for quick jigs vex.",
+    "Quick brown foxes leap over lazy dogs.",
+    "Heavy boxes perform quick waltzes and jigs.",
+    "The job requires extra pluck and zeal from every young wage earner.",
+    "A mad boxer shot a quick, gloved jab to the jaw of his dizzy opponent.",
+    "Six big devils from Japan quickly forgot how to waltz.",
+    "My girl wove six dozen plaid jackets before she quit.",
+    "Sixty zippers were quickly picked from the woven jute bag.",
+    "Big July earthquakes confound zany experimental vow.",
+    "Foxy parsons quiz and cajole the lovably dim wiki-girl.",
+    "Cute, kind, jovial, foxy, zealous, web-browsing nymph.",
+    "Exploring the zoo, we marvelled at the lazy jaguar and the quick, vibrant phoenix."
   ],
   flirty: [
     "Your eyes are like stars, shining brightly in the night sky, guiding me home.",
@@ -22,7 +33,17 @@ const textCollections = {
     "Your presence in my life is like finding a rare gem in a field of stones.",
     "If kisses were snowflakes, I'd send you a blizzard of affection.",
     "My heart beats a special rhythm whenever you're near, a song only you can inspire.",
-    "Like a butterfly drawn to a beautiful flower, I'm captivated by your charm and grace."
+    "Like a butterfly drawn to a beautiful flower, I'm captivated by your charm and grace.",
+    "Are you a magician? Because whenever I look at you, everyone else disappears.",
+    "I must be a snowflake, because I've fallen for you.",
+    "If you were a vegetable, you'd be a cute-cumber.",
+    "Do you believe in love at first type, or should I type this again for you?",
+    "My keyboard is getting jealous of the attention I'm giving your messages.",
+    "You must be made of copper and tellurium, because you're Cu-Te.",
+    "I'm not a photographer, but I can definitely picture us together.",
+    "Was your father a thief? Because someone stole the stars from the sky and put them in your eyes.",
+    "If being sexy was a crime, you'd be guilty as charged.",
+    "Can I follow you home? Cause my parents always told me to follow my dreams."
   ],
   // JavaScript code examples
   developer: [
@@ -30,7 +51,17 @@ const textCollections = {
     "const createTypingTest = ({ mode, duration }) => {\n  return {\n    mode,\n    duration,\n    started: false,\n    completed: false,\n    startTime: null,\n    errors: 0,\n    accuracy: 100\n  };\n};",
     "interface TypingResult {\n  wpm: number;\n  accuracy: number;\n  duration: number;\n  characters: number;\n  errors: number;\n  mode: string;\n}",
     "class TextGenerator {\n  constructor(collection) {\n    this.collection = collection;\n  }\n  \n  getRandomText() {\n    const index = Math.floor(Math.random() * this.collection.length);\n    return this.collection[index];\n  }\n}",
-    "function handleKeyPress(event) {\n  if (!isTypingActive) {\n    startTest();\n    return;\n  }\n  \n  const expectedChar = currentText[currentPosition];\n  const typedChar = event.key;\n  \n  if (typedChar === expectedChar) {\n    correctChars++;\n  } else {\n    errorChars++;\n  }\n  \n  currentPosition++;\n  updateDisplay();\n}"
+    "function handleKeyPress(event) {\n  if (!isTypingActive) {\n    startTest();\n    return;\n  }\n  \n  const expectedChar = currentText[currentPosition];\n  const typedChar = event.key;\n  \n  if (typedChar === expectedChar) {\n    correctChars++;\n  } else {\n    errorChars++;\n  }\n  \n  currentPosition++;\n  updateDisplay();\n}",
+    "async function fetchData(url) {\n  try {\n    const response = await fetch(url);\n    if (!response.ok) {\n      throw new Error(`HTTP error! status: ${response.status}`);\n    }\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Fetch error:', error);\n  }\n}",
+    "const numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(num => num * 2);\nconsole.log(doubled); // Output: [2, 4, 6, 8, 10]",
+    "document.addEventListener('DOMContentLoaded', () => {\n  const button = document.getElementById('myButton');\n  button.addEventListener('click', () => {\n    alert('Button clicked!');\n  });\n});"
+  ],
+  typescript: [
+    "interface UserProfile {\n  id: number;\n  username: string;\n  email?: string;\n  isActive: boolean;\n}\n\nfunction getUserProfile(userId: number): UserProfile | null {\n  // Implementation to fetch user profile\n  if (userId === 1) {\n    return { id: 1, username: 'testuser', isActive: true };\n  }\n  return null;\n}",
+    "class Greeter {\n  private greeting: string;\n  constructor(message: string) {\n    this.greeting = message;\n  }\n  greet(): string {\n    return 'Hello, ' + this.greeting;\n  }\n}\n\nlet greeter = new Greeter('world');\nconsole.log(greeter.greet());",
+    "type Point = { x: number; y: number };\nfunction printCoord(pt: Point) {\n  console.log(\"The coordinate's x value is \" + pt.x);\n  console.log(\"The coordinate's y value is \" + pt.y);\n}\nprintCoord({ x: 100, y: 200 });",
+    "async function processData<T>(data: T[]): Promise<T[]> {\n  return new Promise((resolve) => {\n    setTimeout(() => {\n      const processed = data.map(item => ({ ...item, processed: true }));\n      resolve(processed);\n    }, 1000);\n  });\n}",
+    "enum Direction {\n  Up = 'UP',\n  Down = 'DOWN',\n  Left = 'LEFT',\n  Right = 'RIGHT',\n}\nlet move: Direction = Direction.Left;"
   ],
   // Python code examples
   python: [
@@ -38,7 +69,10 @@ const textCollections = {
     "class TypingTest:\n    def __init__(self, mode, duration):\n        self.mode = mode\n        self.duration = duration\n        self.started = False\n        self.completed = False\n        self.start_time = None\n        self.errors = 0\n        self.accuracy = 100",
     "def get_random_text(collection):\n    \"\"\"Return a random text from the collection.\"\"\"\n    import random\n    return random.choice(collection)",
     "def handle_keypress(event):\n    global is_typing_active, current_position\n    \n    if not is_typing_active:\n        start_test()\n        return\n    \n    expected_char = current_text[current_position]\n    typed_char = event.char\n    \n    if typed_char == expected_char:\n        correct_chars += 1\n    else:\n        error_chars += 1\n        \n    current_position += 1\n    update_display()",
-    "from typing import List, Dict, Optional\n\nclass TextGenerator:\n    def __init__(self, texts: List[str]):\n        self.texts = texts\n        \n    def get_text_for_duration(self, duration: int) -> str:\n        \"\"\"Returns text sized for the given duration in seconds.\"\"\"\n        target_length = duration * 5\n        result = \"\"\n        \n        while len(result) < target_length:\n            result += random.choice(self.texts) + \" \"\n            \n        return result.strip()"
+    "from typing import List, Dict, Optional\n\nclass TextGenerator:\n    def __init__(self, texts: List[str]):\n        self.texts = texts\n        \n    def get_text_for_duration(self, duration: int) -> str:\n        \"\"\"Returns text sized for the given duration in seconds.\"\"\"\n        target_length = duration * 5\n        result = \"\"\n        \n        while len(result) < target_length:\n            result += random.choice(self.texts) + \" \"\n            \n        return result.strip()",
+    "import asyncio\n\nasync def main():\n    print('Hello')\n    await asyncio.sleep(1)\n    print('World')",
+    "my_list = [x**2 for x in range(10) if x % 2 == 0]\nprint(my_list)  # Output: [0, 4, 16, 36, 64]",
+    "# This is a comment\ndef factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n-1)"
   ],
   // Java code examples
   java: [
@@ -46,7 +80,10 @@ const textCollections = {
     "public int calculateWPM(int typedChars, int timeInSeconds) {\n    double minutes = timeInSeconds / 60.0;\n    double words = typedChars / 5.0; // Standard: 5 chars = 1 word\n    return (int) Math.round(words / minutes);\n}",
     "import java.util.Random;\nimport java.util.List;\n\npublic class TextGenerator {\n    private List<String> collection;\n    \n    public TextGenerator(List<String> collection) {\n        this.collection = collection;\n    }\n    \n    public String getRandomText() {\n        Random rand = new Random();\n        int index = rand.nextInt(collection.size());\n        return collection.get(index);\n    }\n}",
     "public void handleKeyPress(KeyEvent event) {\n    if (!isTypingActive) {\n        startTest();\n        return;\n    }\n    \n    char expectedChar = currentText.charAt(currentPosition);\n    char typedChar = event.getKeyChar();\n    \n    if (typedChar == expectedChar) {\n        correctChars++;\n    } else {\n        errorChars++;\n    }\n    \n    currentPosition++;\n    updateDisplay();\n}",
-    "import java.util.*;\n\npublic interface TypingResult {\n    int getWpm();\n    double getAccuracy();\n    int getDuration();\n    int getCharacters();\n    int getErrors();\n    String getMode();\n}"
+    "import java.util.*;\n\npublic interface TypingResult {\n    int getWpm();\n    double getAccuracy();\n    int getDuration();\n    int getCharacters();\n    int getErrors();\n    String getMode();\n}",
+    "import java.util.stream.Collectors;\nList<String> strings = Arrays.asList(\"abc\", \"\", \"bc\", \"efg\", \"abcd\", \"\", \"jkl\");\nList<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());",
+    "// Example of a simple for loop\nfor (int i = 0; i < 5; i++) {\n  System.out.println(\"Iteration: \" + i);\n}",
+    "public static void main(String[] args) {\n    System.out.println(\"Hello, Java World!\");\n    MyClass myObject = new MyClass();\n    myObject.sampleMethod();\n}"
   ],
   // C# code examples
   csharp: [
@@ -54,7 +91,10 @@ const textCollections = {
     "public int CalculateWPM(int typedChars, int timeInSeconds)\n{\n    double minutes = timeInSeconds / 60.0;\n    double words = typedChars / 5.0; // Standard: 5 chars = 1 word\n    return (int)Math.Round(words / minutes);\n}",
     "using System;\nusing System.Collections.Generic;\n\npublic class TextGenerator\n{\n    private List<string> _collection;\n    \n    public TextGenerator(List<string> collection)\n    {\n        _collection = collection;\n    }\n    \n    public string GetRandomText()\n    {\n        Random random = new Random();\n        int index = random.Next(_collection.Count);\n        return _collection[index];\n    }\n}",
     "private void HandleKeyPress(object sender, KeyEventArgs e)\n{\n    if (!_isTypingActive)\n    {\n        StartTest();\n        return;\n    }\n    \n    char expectedChar = _currentText[_currentPosition];\n    char typedChar = e.KeyChar;\n    \n    if (typedChar == expectedChar)\n    {\n        _correctChars++;\n    }\n    else\n    {\n        _errorChars++;\n    }\n    \n    _currentPosition++;\n    UpdateDisplay();\n}",
-    "public interface ITypingResult\n{\n    int Wpm { get; }\n    double Accuracy { get; }\n    int Duration { get; }\n    int Characters { get; }\n    int Errors { get; }\n    string Mode { get; }\n}"
+    int Wpm { get; }\n    double Accuracy { get; }\n    int Duration { get; }\n    int Characters { get; }\n    int Errors { get; }\n    string Mode { get; }\n}",
+    "using System.Linq;\nint[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };\nvar lowNums = numbers.Where(n => n < 5);\nConsole.WriteLine(\"Numbers < 5:\");\nforeach (var x in lowNums)\n{\n    Console.WriteLine(x);\n}",
+    "public async Task<string> GetDataAsync(string url)\n{\n    using (HttpClient client = new HttpClient())\n    {\n        HttpResponseMessage response = await client.GetAsync(url);\n        response.EnsureSuccessStatusCode();\n        return await response.Content.ReadAsStringAsync();\n    }\n}",
+    "// Simple C# class\npublic class Customer\n{\n    public int Id { get; set; }\n    public string Name { get; set; }\n    public void PrintCustomerInfo()\n    {\n        Console.WriteLine($\"Customer ID: {Id}, Name: {Name}\");\n    }\n}"
   ],
   // Go code examples
   go: [
@@ -62,7 +102,10 @@ const textCollections = {
     "package main\n\ntype TypingTest struct {\n\tMode      string\n\tDuration  int\n\tStarted   bool\n\tCompleted bool\n\tStartTime int64\n\tErrors    int\n\tAccuracy  float64\n}\n\nfunc NewTypingTest(mode string, duration int) *TypingTest {\n\treturn &TypingTest{\n\t\tMode:      mode,\n\t\tDuration:  duration,\n\t\tStarted:   false,\n\t\tCompleted: false,\n\t\tStartTime: 0,\n\t\tErrors:    0,\n\t\tAccuracy:  100.0,\n\t}\n}",
     "package main\n\nimport (\n\t\"math/rand\"\n\t\"time\"\n)\n\ntype TextGenerator struct {\n\tcollection []string\n}\n\nfunc NewTextGenerator(collection []string) *TextGenerator {\n\treturn &TextGenerator{collection: collection}\n}\n\nfunc (g *TextGenerator) GetRandomText() string {\n\trand.Seed(time.Now().UnixNano())\n\tindex := rand.Intn(len(g.collection))\n\treturn g.collection[index]\n}",
     "package main\n\nimport \"fmt\"\n\ntype TypingResult interface {\n\tGetWPM() int\n\tGetAccuracy() float64\n\tGetDuration() int\n\tGetCharacters() int\n\tGetErrors() int\n\tGetMode() string\n}",
-    "package main\n\nfunc handleKeyPress(event KeyEvent) {\n\tif !isTypingActive {\n\t\tstartTest()\n\t\treturn\n\t}\n\t\n\texpectedChar := currentText[currentPosition]\n\ttypedChar := event.Key\n\t\n\tif typedChar == expectedChar {\n\t\tcorrectChars++\n\t} else {\n\t\terrorChars++\n\t}\n\t\n\tcurrentPosition++\n\tupdateDisplay()\n}"
+	}\n\t\n\texpectedChar := currentText[currentPosition]\n\ttypedChar := event.Key\n\t\n\tif typedChar == expectedChar {\n\t\tcorrectChars++\n\t} else {\n\t\terrorChars++\n\t}\n\t\n\tcurrentPosition++\n\tupdateDisplay()\n}",
+    "// Simple Go function with a loop\nfunc printNumbers(n int) {\n    for i := 0; i < n; i++ {\n        fmt.Println(i)\n    }\n}",
+    "// Go channel example\nfunc worker(id int, jobs <-chan int, results chan<- int) {\n    for j := range jobs {\n        fmt.Println(\"worker\", id, \"started job\", j)\n        time.Sleep(time.Second)\n        fmt.Println(\"worker\", id, \"finished job\", j)\n        results <- j * 2\n    }\n}",
+    "type Server struct {\n    Host string\n    Port int\n}\n\nfunc (s *Server) Start() error {\n    address := fmt.Sprintf(\"%s:%d\", s.Host, s.Port)\n    fmt.Println(\"Starting server on\", address)\n    // Actual server start logic here\n    return nil\n}"
   ]
 };
 

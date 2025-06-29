@@ -20,7 +20,10 @@ export default function Header() {
       <div className="flex items-center relative z-10">
         <div 
           onClick={navigateToHome}
-          className="flex items-center gap-3 hover:opacity-90 transition-all duration-300 cursor-pointer group"
+          className="flex items-center gap-3 hover:opacity-90 transition-all duration-300 cursor-pointer group custom-focus-ring rounded-lg p-1"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateToHome(e as any); }}
         >
           <div className="relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-sky-500/30 to-indigo-500/30 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
